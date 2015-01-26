@@ -57,8 +57,8 @@ public class ShipMovement2D : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
+        handling = baseHandling;
 		if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine) {
-			handling = baseHandling;
 			if (Input.GetAxis ("Throttle") > 0f) {
 					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * forwardThrust * Vector3.forward);
 					handling = baseHandling + (thrustHandling - baseHandling) * Input.GetAxis ("Throttle");
