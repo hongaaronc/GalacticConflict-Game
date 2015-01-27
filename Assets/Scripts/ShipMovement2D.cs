@@ -26,8 +26,9 @@ public class ShipMovement2D : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		myRigidBody = GetComponent<Rigidbody> ();
-		terminalVelocity = ((forwardThrust / myRigidBody.drag) - Time.fixedDeltaTime * forwardThrust) / myRigidBody.mass;
+        terminalVelocity = forwardThrust / (myRigidBody.mass * myRigidBody.drag);
 		terminalAngularVelocity = ((turnRate / myRigidBody.angularDrag) - Time.fixedDeltaTime * turnRate) / myRigidBody.mass;
+        terminalAngularVelocity = turnRate / (myRigidBody.mass * myRigidBody.angularDrag);
 		if (terminalVelocity > topSpeed) {
 			terminalVelocity = topSpeed;
 		}
@@ -53,7 +54,7 @@ public class ShipMovement2D : MonoBehaviour {
 				//transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, transform.localEulerAngles.y, -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity);
 			float targetTiltAngle = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
 		}
-		//print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
+		print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
 	}
 	
 	void FixedUpdate() {
