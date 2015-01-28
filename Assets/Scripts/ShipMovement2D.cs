@@ -47,9 +47,6 @@ public class ShipMovement2D : MonoBehaviour {
             myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
         }
 		if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine) {
-				if (Input.GetKeyDown (KeyCode.Space)) {
-						Instantiate (myWeapon, transform.position, Quaternion.identity);
-				}
 				//Changing euler angles directly causes massive performance issues - figure out how to use rigid body functions for this later
 				//transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, transform.localEulerAngles.y, -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity);
 			float targetTiltAngle = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
