@@ -19,26 +19,24 @@ public class WeaponSystem : GenericSystem {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-            if (timer <= fireTimes[fireTimes.Length - 1] + coolDown)
+        if (timer <= fireTimes[fireTimes.Length - 1] + coolDown)
+        {
+            if (triggerOnce || myKeyDown)
             {
-                bool fireReady = false;
                 foreach (int time in fireTimes)
                 {
                     if (time == timer)
                     {
-                        if (triggerOnce || myKeyDown)
-                        {
-                            if (myNetworkManager.multiplayerEnabled)
-                                Network.Instantiate(myWeapon, transform.position, transform.rotation, 0);
-                            else
-                                Instantiate(myWeapon, transform.position, transform.rotation);
-                        }
-                        fireReady = true;
+                        if (myNetworkManager.multiplayerEnabled)
+                            Network.Instantiate(myWeapon, transform.position, transform.rotation, 0);
+                        else
+                            Instantiate(myWeapon, transform.position, transform.rotation);
                     }
 
                 }
-                timer++;
             }
+            timer++;
+        }
         myKeyDown = false;
 	}
 

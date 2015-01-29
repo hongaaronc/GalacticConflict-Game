@@ -15,3 +15,4 @@ public class Star : MonoBehaviour {
 		}
 	}
 }
+    

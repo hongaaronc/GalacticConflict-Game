@@ -8,7 +8,6 @@ public class ShipMovement2D : MonoBehaviour {
 	public float baseHandling = 0.2f;
 	public float thrustHandling = 0.1f;
 	public float turnRate = 4f;
-	public Object myWeapon;
 
 	public float topSpeed = 9.0f;
 	public float topAngularSpeed = 10f;
@@ -46,11 +45,6 @@ public class ShipMovement2D : MonoBehaviour {
         {
             myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
         }
-		if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine) {
-				//Changing euler angles directly causes massive performance issues - figure out how to use rigid body functions for this later
-				//transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, transform.localEulerAngles.y, -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity);
-			float targetTiltAngle = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
-		}
 		print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
 	}
 	
@@ -67,6 +61,18 @@ public class ShipMovement2D : MonoBehaviour {
 					myRigidBody.AddTorque (Input.GetAxis ("Rudder") * turnRate * Vector3.up);
 			}
 		}
+        float targetTiltAngle = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
+        float angleDiffZ = targetTiltAngle - transform.eulerAngles.z;
+        if (angleDiffZ > 180f)
+            angleDiffZ -= 360f;
+        if (angleDiffZ < -180f)
+            angleDiffZ += 360f;
+        float angleDiffX = 0f - transform.eulerAngles.x;
+        if (angleDiffX > 180f)
+            angleDiffX -= 360f;
+        if (angleDiffX < -180f)
+            angleDiffX += 360f;
+        myRigidBody.AddRelativeTorque(angleDiffX, 0f, 15f * angleDiffZ);
         glide();
 	}
 	
