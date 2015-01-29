@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class WeaponSystem : GenericSystem {
-    public GameObject myWeapon;
+    public GameObject[] myWeapons;
     public int[] fireTimes;
     public int coolDown;
     public bool triggerOnce;        //If true, key only needs to be tapped once for the whole system to trigger. If false, key needs to be held down to continue 
@@ -17,7 +17,7 @@ public class WeaponSystem : GenericSystem {
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
 	
-	// Update is called once per frame
+	
 	void FixedUpdate () {
         if (timer <= fireTimes[fireTimes.Length - 1] + coolDown)
         {
@@ -27,10 +27,12 @@ public class WeaponSystem : GenericSystem {
                 {
                     if (time == timer)
                     {
-                        if (myNetworkManager.multiplayerEnabled)
-                            Network.Instantiate(myWeapon, transform.position, transform.rotation, 0);
-                        else
-                            Instantiate(myWeapon, transform.position, transform.rotation);
+                        foreach (GameObject weapon in myWeapons) {
+                            if (myNetworkManager.multiplayerEnabled)
+                                Network.Instantiate(weapon, transform.position, transform.rotation, 0);
+                            else
+                                Instantiate(weapon, transform.position, transform.rotation);
+                        }
                     }
 
                 }
