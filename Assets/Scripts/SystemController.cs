@@ -7,9 +7,10 @@ public class SystemController : MonoBehaviour {
 	void Start () {
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         if (Input.GetKey(KeyCode.Space))
         {
             foreach (GenericSystem system in systems)
@@ -17,5 +18,16 @@ public class SystemController : MonoBehaviour {
                 system.Activate();
             }
         }
-	}
+    }
+
+    void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            foreach (GenericSystem system in systems)
+            {
+                system.Activate();
+            }
+        }
+    }
 }

@@ -14,6 +14,8 @@ public class ShipMovement2D : MonoBehaviour {
 	public float turnAngleMin = 20f;
 	public float turnAngleMax = 90f;
 
+    public float tiltTorque = 15f;
+
 	private float terminalVelocity;
 	private float terminalAngularVelocity;
 	private float handling;
@@ -41,11 +43,7 @@ public class ShipMovement2D : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (myRigidBody.velocity.magnitude > topSpeed)
-        {
-            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
-        }
-		print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
+		//print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
 	}
 	
 	void FixedUpdate() {
@@ -61,8 +59,8 @@ public class ShipMovement2D : MonoBehaviour {
 					myRigidBody.AddTorque (Input.GetAxis ("Rudder") * turnRate * Vector3.up);
 			}
 		}
-        float targetTiltAngle = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
-        float angleDiffZ = targetTiltAngle - transform.eulerAngles.z;
+        float targetTiltAngleZ = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
+        float angleDiffZ = targetTiltAngleZ - transform.eulerAngles.z;
         if (angleDiffZ > 180f)
             angleDiffZ -= 360f;
         if (angleDiffZ < -180f)
@@ -72,8 +70,12 @@ public class ShipMovement2D : MonoBehaviour {
             angleDiffX -= 360f;
         if (angleDiffX < -180f)
             angleDiffX += 360f;
-        myRigidBody.AddRelativeTorque(angleDiffX, 0f, 15f * angleDiffZ);
+        myRigidBody.AddRelativeTorque(angleDiffX, 0f, tiltTorque * angleDiffZ);
         glide();
+        if (myRigidBody.velocity.magnitude > topSpeed)
+        {
+            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
+        }
 	}
 	
 	private void glide() {

@@ -77,6 +77,6 @@ public class NetworkManager : MonoBehaviour {
 			newShip = (GameObject)Network.Instantiate (Resources.Load ("Ships/Fighter"), Vector3.zero, Quaternion.identity, 0);
 		else
             newShip = (GameObject)Instantiate(Resources.Load("Ships/Fighter"), Vector3.zero, Quaternion.identity);
-		GetComponent<CameraFollow> ().myTargets [0] = newShip.transform;
+		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
 	}
 }
