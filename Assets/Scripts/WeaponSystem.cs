@@ -3,6 +3,7 @@ using System.Collections;
 
 public class WeaponSystem : GenericSystem {
     public GameObject[] myWeapons;
+    public bool inheritVelocity = false;
     public int[] fireTimes;
     public int coolDown;
     public bool triggerOnce;        //If true, key only needs to be tapped once for the whole system to trigger. If false, key needs to be held down to continue 
@@ -27,11 +28,16 @@ public class WeaponSystem : GenericSystem {
                 {
                     if (time == timer)
                     {
+                        GameObject newWeapon;
                         foreach (GameObject weapon in myWeapons) {
                             if (myNetworkManager.multiplayerEnabled)
-                                Network.Instantiate(weapon, transform.position, transform.rotation, 0);
+                                newWeapon = (GameObject)Network.Instantiate(weapon, transform.position, transform.rotation, 0);
                             else
-                                Instantiate(weapon, transform.position, transform.rotation);
+                                newWeapon = (GameObject)Instantiate(weapon, transform.position, transform.rotation);
+                            if (inheritVelocity) {
+                                if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
+                                    newWeapon.GetComponent<Rigidbody>().velocity = GetComponentInParent<Rigidbody>().velocity;
+                            }
                         }
                     }
 
