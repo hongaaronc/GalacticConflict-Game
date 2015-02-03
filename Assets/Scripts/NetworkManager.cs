@@ -74,9 +74,9 @@ public class NetworkManager : MonoBehaviour {
 	void spawnShip() {
 		GameObject newShip;
 		if (multiplayerEnabled)
-			newShip = (GameObject)Network.Instantiate (Resources.Load ("Ships/Fighter"), Vector3.zero, Quaternion.identity, 0);
+			newShip = (GameObject)Network.Instantiate (Resources.Load ("Ships/Carrier"), Vector3.zero, Quaternion.identity, 0);
 		else
-            newShip = (GameObject)Instantiate(Resources.Load("Ships/Fighter"), Vector3.zero, Quaternion.identity);
+            newShip = (GameObject)Instantiate(Resources.Load("Ships/Carrier"), Vector3.zero, Quaternion.identity);
 		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
 	}
 }

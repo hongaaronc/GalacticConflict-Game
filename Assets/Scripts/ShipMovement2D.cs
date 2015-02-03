@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class ShipMovement2D : MonoBehaviour {
+    
 	public float forwardThrust = 10f;
 	public float reverseThrust = 0f;
 	public float brakeDrag = 10f;
@@ -44,6 +45,7 @@ public class ShipMovement2D : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
+        
 	}
 	
 	void FixedUpdate() {
