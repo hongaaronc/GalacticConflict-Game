@@ -6,6 +6,7 @@ public class NetworkManager : MonoBehaviour {
 	private const string typeName = "AaronsSpaceGame";
 	private const string gameName = "SpaceGameRoom";
 	public bool multiplayerEnabled = false;
+    private bool hostable = false;
 
 	void Start() {
 		if (!multiplayerEnabled) {
@@ -24,12 +25,19 @@ public class NetworkManager : MonoBehaviour {
 		spawnShip ();
 	}
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Pause))
+            hostable = true;
+    }
+
 	void OnGUI()
 	{
 		if (multiplayerEnabled && !Network.isClient && !Network.isServer)
 		{
-			if (GUI.Button(new Rect(100, 100, 250, 100), "Start Server"))
-				StartServer();
+            if (hostable)
+			    if (GUI.Button(new Rect(100, 100, 250, 100), "Start Server"))
+				    StartServer();
 			
 			if (GUI.Button(new Rect(100, 250, 250, 100), "Refresh Hosts"))
 				RefreshHostList();

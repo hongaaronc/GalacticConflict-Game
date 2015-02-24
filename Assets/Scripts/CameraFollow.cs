@@ -8,12 +8,20 @@ public class CameraFollow : MonoBehaviour {
     public float leadMultiplier = 5f;
 	// Use this for initialization
 	void Start () {
-        transform.position = new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadMultiplier * myTargets[0].velocity;
+        try
+        {
+            transform.position = new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadMultiplier * myTargets[0].velocity;
+        }
+        catch { }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position += ((new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadMultiplier * myTargets[0].velocity) - transform.position) / easing;
+        try
+        {
+            transform.position += ((new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadMultiplier * myTargets[0].velocity) - transform.position) / easing;
+        }
+        catch { }
 		transform.eulerAngles = new Vector3 (90f, 0f, 0f);
 	}
 }
