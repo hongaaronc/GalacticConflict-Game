@@ -14,13 +14,13 @@ public class WeaponSystem : GenericSystem {
     private NetworkManager myNetworkManager;
 	// Use this for initialization
 	void Start () {
-        timer = fireTimes[fireTimes.Length - 1] + coolDown + 1;
+        timer = coolDown + 1;
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
 	
 	
 	void FixedUpdate () {
-        if (timer <= fireTimes[fireTimes.Length - 1] + coolDown)
+        if (timer <= coolDown)
         {
             if (triggerOnce || myKeyDown)
             {
@@ -51,7 +51,7 @@ public class WeaponSystem : GenericSystem {
     public override void Activate()
     {
         myKeyDown = true;
-        if (timer > fireTimes[fireTimes.Length - 1] + coolDown)
+        if (timer > coolDown)
             timer = 0;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class SystemController : MonoBehaviour {
+    public int abilityNum;
     public GenericSystem[] systems;
 
     private NetworkView myNetworkView;
@@ -17,7 +18,7 @@ public class SystemController : MonoBehaviour {
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetAxisRaw("Ability"+abilityNum) == 1.0f)
             {
                 foreach (GenericSystem system in systems)
                 {
@@ -31,7 +32,7 @@ public class SystemController : MonoBehaviour {
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetAxisRaw("Ability" + abilityNum) == 1.0f)
             {
                 foreach (GenericSystem system in systems)
                 {
