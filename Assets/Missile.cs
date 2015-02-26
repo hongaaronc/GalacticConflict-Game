@@ -5,6 +5,11 @@ public class Missile : MonoBehaviour
 {
     public float fireForce;
     public float lifetime = 1f;
+    public float deathTime = 1f;
+    public GameObject explosion;
+    public ParticleSystem[] particleSystems;
+
+    private bool dead = false;
 
     private float terminalVelocity;
     private float terminalAngularVelocity;
@@ -16,8 +21,8 @@ public class Missile : MonoBehaviour
     {
         myRigidBody = GetComponent<Rigidbody>();
         myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
-        myRigidBody.AddRelativeForce(Random.Range(-3.0f, 3.0f) * Vector3.right);
-        myRigidBody.AddTorque(Random.Range(-40.0f, 40.0f) * Vector3.up);
+        myRigidBody.AddRelativeForce(Random.Range(-3.2f, 3.2f) * Vector3.right);
+        myRigidBody.AddTorque(Random.Range(-30.0f, 30.0f) * Vector3.up);
     }
 
     // Update is called once per frame
@@ -25,7 +30,22 @@ public class Missile : MonoBehaviour
     {
         lifetime -= Time.deltaTime;
         if (lifetime <= 0f)
-            Destroy(gameObject);
+        {
+            if (!dead)
+            {
+                Instantiate(explosion, transform.position, Quaternion.identity);
+                foreach (ParticleSystem ps in particleSystems)
+                {
+                    ps.emissionRate = 0f;
+                }
+                dead = true;
+            }
+            deathTime -= Time.deltaTime;
+            if (deathTime <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     void FixedUpdate()
