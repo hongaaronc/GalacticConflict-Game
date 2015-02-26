@@ -9,6 +9,7 @@ public class MouseInput : MonoBehaviour {
     Vector3 cursorPosition;
     Vector3 mousePosition = Vector3.zero;
     Vector3 lastMousePosition = Vector3.zero;
+    Vector3 initialMousePosition = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
@@ -16,15 +17,16 @@ public class MouseInput : MonoBehaviour {
         Cursor.visible = false;
         //cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //cursorPosition.y = Camera.main.transform.position.y;
-        lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
         lastMousePosition.y = Camera.main.transform.position.y;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        //Cursor.visible = false;
         //Cursor.SetCursor(cursorIdle, Vector2.zero, CursorMode.Auto);
         GetComponent<SpriteRenderer>().sprite = cursorIdle;
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition)-Camera.main.transform.position;
         mousePosition.y = Camera.main.transform.position.y;
         transform.position += mousePosition - lastMousePosition;
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 10f);
@@ -35,7 +37,7 @@ public class MouseInput : MonoBehaviour {
             Debug.DrawLine(transform.position, hit.point, Color.red);
             //Cursor.SetCursor(cursorHover, Vector2.zero, CursorMode.Auto);
             GetComponent<SpriteRenderer>().sprite = cursorHover;
-            print("hit");
+            //print("hit");
         }
         lastMousePosition = mousePosition;
 	}
