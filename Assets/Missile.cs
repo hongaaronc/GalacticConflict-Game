@@ -3,23 +3,28 @@ using System.Collections;
 
 public class Missile : MonoBehaviour
 {
+    public Vector3 targetVector;
     public float fireForce;
+    public float thrust;
     public float lifetime = 1f;
     public float deathTime = 1f;
     public GameObject explosion;
     public ParticleSystem[] particleSystems;
 
-    private bool dead = false;
+    public float topSpeed = 9.0f;
+    public float topAngularSpeed = 10f;
 
-    private float terminalVelocity;
-    private float terminalAngularVelocity;
     public float handling;
+
+    private bool dead = false;
 
     private Rigidbody myRigidBody;
     // Use this for initialization
     void Start()
     {
+        targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         myRigidBody = GetComponent<Rigidbody>();
+        myRigidBody.maxAngularVelocity = topAngularSpeed;
         myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
         myRigidBody.AddRelativeForce(Random.Range(-3.2f, 3.2f) * Vector3.right);
         myRigidBody.AddTorque(Random.Range(-30.0f, 30.0f) * Vector3.up);
@@ -28,6 +33,8 @@ public class Missile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.LookAt(targetVector);
+        //print (Vector3.Angle(transform.position, targetVector)) ;
         lifetime -= Time.deltaTime;
         if (lifetime <= 0f)
         {
@@ -38,6 +45,7 @@ public class Missile : MonoBehaviour
                 {
                     ps.emissionRate = 0f;
                 }
+                myRigidBody.velocity = Vector3.zero;
                 dead = true;
             }
             deathTime -= Time.deltaTime;
@@ -50,7 +58,12 @@ public class Missile : MonoBehaviour
 
     void FixedUpdate()
     {
+        myRigidBody.AddRelativeForce(thrust * Vector3.forward);
         glide();
+        if (myRigidBody.velocity.magnitude > topSpeed)
+        {
+            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
+        }
     }
 
     private void glide()
