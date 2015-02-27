@@ -5,6 +5,7 @@ public class ShipMovement2D : MonoBehaviour {
     
 	public float forwardThrust = 10f;
 	public float reverseThrust = 0f;
+    private float baseDrag;
 	public float brakeDrag = 10f;
 	public float baseHandling = 0.2f;
 	public float thrustHandling = 0.1f;
@@ -38,6 +39,7 @@ public class ShipMovement2D : MonoBehaviour {
 		if (terminalAngularVelocity > myRigidBody.maxAngularVelocity) {
 			terminalAngularVelocity = myRigidBody.maxAngularVelocity;
 		}
+        baseDrag = myRigidBody.drag;
 		myNetworkView = GetComponent<NetworkView>();
 		myNetworkManager = Camera.main.GetComponent<NetworkManager> ();
 	}
@@ -50,12 +52,14 @@ public class ShipMovement2D : MonoBehaviour {
 	
 	void FixedUpdate() {
         handling = baseHandling;
+        myRigidBody.drag = baseDrag;
 		if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine) {
 			if (Input.GetAxis ("Throttle") > 0f) {
 					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * forwardThrust * Vector3.forward);
 					handling = baseHandling + (thrustHandling - baseHandling) * Input.GetAxis ("Throttle");
 			} else if (Input.GetAxis ("Throttle") < 0f) {
 					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * reverseThrust * Vector3.forward);
+                    myRigidBody.drag = baseDrag + (brakeDrag - baseDrag) * Mathf.Abs(Input.GetAxis("Throttle"));
 			}
 			if (Input.GetAxis ("Rudder") != 0f) {
 					myRigidBody.AddTorque (Input.GetAxis ("Rudder") * turnRate * Vector3.up);
