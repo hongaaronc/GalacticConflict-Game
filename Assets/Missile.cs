@@ -23,6 +23,7 @@ public class Missile : MonoBehaviour
     void Start()
     {
         targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        targetVector.y = transform.position.y;
         myRigidBody = GetComponent<Rigidbody>();
         myRigidBody.maxAngularVelocity = topAngularSpeed;
         myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
@@ -33,6 +34,8 @@ public class Missile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        targetVector.y = transform.position.y;
         transform.LookAt(targetVector);
         //print (Vector3.Angle(transform.position, targetVector)) ;
         lifetime -= Time.deltaTime;
