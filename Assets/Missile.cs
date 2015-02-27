@@ -6,6 +6,7 @@ public class Missile : MonoBehaviour
     public Vector3 targetVector;
     public float fireForce;
     public float thrust;
+    public float detonateRange = 0.2f;
     public float lifetime = 1f;
     public float deathTime = 1f;
     public GameObject explosion;
@@ -19,54 +20,87 @@ public class Missile : MonoBehaviour
     private bool dead = false;
 
     private Rigidbody myRigidBody;
+    private NetworkView myNetworkView;
+    private NetworkManager myNetworkManager;
+
     // Use this for initialization
     void Start()
     {
-        targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        targetVector.y = transform.position.y;
+        //targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //targetVector.y = transform.position.y;
         myRigidBody = GetComponent<Rigidbody>();
         myRigidBody.maxAngularVelocity = topAngularSpeed;
         myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
         myRigidBody.AddRelativeForce(Random.Range(-3.2f, 3.2f) * Vector3.right);
         myRigidBody.AddTorque(Random.Range(-30.0f, 30.0f) * Vector3.up);
+
+        myNetworkView = GetComponent<NetworkView>();
+        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        targetVector.y = transform.position.y;
-        transform.LookAt(targetVector);
-        //print (Vector3.Angle(transform.position, targetVector)) ;
-        lifetime -= Time.deltaTime;
-        if (lifetime <= 0f)
+        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            if (!dead)
+            //targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //targetVector.y = transform.position.y;
+            targetVector = Vector3.zero;
+            transform.LookAt(targetVector);
+            //print (Vector3.Angle(transform.position, targetVector)) ;
+            lifetime -= Time.deltaTime;
+            if (lifetime <= 0f)
             {
-                Instantiate(explosion, transform.position, Quaternion.identity);
-                foreach (ParticleSystem ps in particleSystems)
+                if (!dead)
                 {
-                    ps.emissionRate = 0f;
+                    detonate();
                 }
-                myRigidBody.velocity = Vector3.zero;
-                dead = true;
             }
-            deathTime -= Time.deltaTime;
-            if (deathTime <= 0f)
+            if (dead)
             {
-                Destroy(gameObject);
+                deathTime -= Time.deltaTime;
+                if (deathTime <= 0f)
+                {
+                    if (myNetworkManager.multiplayerEnabled)
+                        Network.Destroy(gameObject);
+                    else
+                        Destroy(gameObject);
+                }
             }
         }
     }
 
     void FixedUpdate()
     {
-        myRigidBody.AddRelativeForce(thrust * Vector3.forward);
-        glide();
-        if (myRigidBody.velocity.magnitude > topSpeed)
+        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
+            if (!dead)
+            {
+                myRigidBody.AddRelativeForce(thrust * Vector3.forward);
+                glide();
+                if (myRigidBody.velocity.magnitude > topSpeed)
+                {
+                    myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
+                }
+                if ((transform.position - targetVector).magnitude <= detonateRange)
+                    detonate();
+            }
+            else
+            {
+                myRigidBody.velocity = Vector3.zero;
+            }
         }
+    }
+
+    public void detonate()
+    {
+        Instantiate(explosion, transform.position, Quaternion.identity);
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            ps.emissionRate = 0f;
+        }
+        myRigidBody.velocity = Vector3.zero;
+        dead = true;
     }
 
     private void glide()
