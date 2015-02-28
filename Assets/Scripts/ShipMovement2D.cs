@@ -54,14 +54,14 @@ public class ShipMovement2D : MonoBehaviour {
         handling = baseHandling;
         myRigidBody.drag = baseDrag;
 		if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine) {
-			if (Input.GetAxis ("Throttle") > 0f) {
+			if (Input.GetAxisRaw ("Throttle") > 0f) {
 					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * forwardThrust * Vector3.forward);
 					handling = baseHandling + (thrustHandling - baseHandling) * Input.GetAxis ("Throttle");
-			} else if (Input.GetAxis ("Throttle") < 0f) {
+			} else if (Input.GetAxisRaw ("Throttle") < 0f) {
 					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * reverseThrust * Vector3.forward);
                     myRigidBody.drag = baseDrag + (brakeDrag - baseDrag) * Mathf.Abs(Input.GetAxis("Throttle"));
 			}
-			if (Input.GetAxis ("Rudder") != 0f) {
+			if (Input.GetAxisRaw ("Rudder") != 0f) {
 					myRigidBody.AddTorque (Input.GetAxis ("Rudder") * turnRate * Vector3.up);
 			}
 		}
