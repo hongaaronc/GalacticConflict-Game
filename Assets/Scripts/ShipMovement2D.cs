@@ -21,6 +21,10 @@ public class ShipMovement2D : MonoBehaviour {
 	private float terminalVelocity;
 	private float terminalAngularVelocity;
 	private float handling;
+
+    public float warpSpeed = 0.5f;
+    private float startWarpTime;
+    private float warpTime;
 	
 	private Rigidbody myRigidBody;
 	private NetworkView myNetworkView;
@@ -47,7 +51,6 @@ public class ShipMovement2D : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//print (myRigidBody.angularVelocity.y +"/"+ terminalAngularVelocity);
-        
 	}
 	
 	void FixedUpdate() {
@@ -78,6 +81,24 @@ public class ShipMovement2D : MonoBehaviour {
             angleDiffX += 360f;
         myRigidBody.AddRelativeTorque(angleDiffX, 0f, tiltTorque * angleDiffZ);
         glide();
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            startWarpTime = Time.time;
+            warpTime = 0f;
+        }
+        if (Input.GetKey(KeyCode.I))
+        {
+            //transform.position += warpSpeed * (Time.time - startWarpTime) * new Vector3(Mathf.Sin(Mathf.PI / 180f * transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * transform.eulerAngles.y));
+            myRigidBody.AddRelativeForce(warpSpeed * (warpTime) * Vector3.forward);
+            warpTime++;
+            topSpeed = 120f;
+        }
+        else
+        {
+            myRigidBody.isKinematic = false;
+        }
+
         if (myRigidBody.velocity.magnitude > topSpeed)
         {
             myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
