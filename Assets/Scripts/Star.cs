@@ -5,11 +5,12 @@ public class Star : MonoBehaviour {
 	public float range = 100f;
     public float parallaxMult = 1f;
 
-    public float warpSpeed = 0.5f;
+    public float warpSpeed = 5f;
     public float warpRange = 2f;
     public float warpDistortion = 40f;
     public bool noReverseDistortion = true;
     private float startWarpTime;
+    private bool warpingLastFrame = false;
 
     private Vector3 cameraLastPosition;
 	// Use this for initialization
@@ -20,25 +21,29 @@ public class Star : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        Rigidbody mainShip = Camera.main.GetComponent<CameraFollow>().myTargets[0];
         transform.position -= (parallaxMult - 1f) * (Camera.main.transform.position - cameraLastPosition);
-        if (Input.GetKeyDown(KeyCode.I))
+        if (mainShip != null)
         {
-            GetComponent<TrailRenderer>().enabled = true;
-            startWarpTime = Time.time;
-        }
-        if (Input.GetKey(KeyCode.I))
-        {
-            GetComponent<TrailRenderer>().enabled = true;
-            Transform warpingShip = Camera.main.GetComponent<CameraFollow>().myTargets[0].transform;
-            float warpConst = (warpRange - (transform.position - warpingShip.position).magnitude)/warpRange;
-            if (noReverseDistortion && warpConst < 0f)
-                warpConst = 0f;
-                transform.position += 1f / (1f + warpDistortion * warpConst) * warpSpeed * (Time.time - startWarpTime) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * warpingShip.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * warpingShip.eulerAngles.y));
+            if (!warpingLastFrame && mainShip.GetComponent<ShipMovement2D>().warping)
+            {
+                GetComponent<TrailRenderer>().enabled = true;
+                startWarpTime = Time.time;
             }
-        else
-        {
-            GetComponent<TrailRenderer>().enabled = false;
-            wrap();
+            if (mainShip.GetComponent<ShipMovement2D>().warping)
+            {
+                GetComponent<TrailRenderer>().enabled = true;
+                float warpConst = (warpRange - (transform.position - mainShip.position).magnitude) / warpRange;
+                if (noReverseDistortion && warpConst < 0f)
+                    warpConst = 0f;
+                transform.position += 1f / (1f + warpDistortion * warpConst) * warpSpeed * (Time.time - startWarpTime) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * mainShip.transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * mainShip.transform.eulerAngles.y));
+            }
+            else
+            {
+                GetComponent<TrailRenderer>().enabled = false;
+                wrap();
+            }
+            warpingLastFrame = mainShip.GetComponent<ShipMovement2D>().warping;
         }
         cameraLastPosition = Camera.main.transform.position;
 	}

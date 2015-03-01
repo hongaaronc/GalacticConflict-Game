@@ -27,7 +27,9 @@ public class ShipMovement2D : MonoBehaviour {
     public float warpSpeed = 0.5f;
     private float startWarpTime;
     private float warpTime;
-    public GameObject warpParticles;
+    public GameObject warpEnterParticles;
+    public GameObject warpExitParticles;
+    [HideInInspector] public bool warping = false;
 	
 	private Rigidbody myRigidBody;
 	private NetworkView myNetworkView;
@@ -48,6 +50,9 @@ public class ShipMovement2D : MonoBehaviour {
 		}
         baseDrag = myRigidBody.drag;
         baseTopSpeed = topSpeed;
+
+        warping = false;
+
 		myNetworkView = GetComponent<NetworkView>();
 		myNetworkManager = Camera.main.GetComponent<NetworkManager> ();
 	}
@@ -60,18 +65,27 @@ public class ShipMovement2D : MonoBehaviour {
 	void FixedUpdate() {
         handling = baseHandling;
         myRigidBody.drag = baseDrag;
-		if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine) {
-			if (Input.GetAxisRaw ("Throttle") > 0f) {
-					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * forwardThrust * Vector3.forward);
-					handling = baseHandling + (thrustHandling - baseHandling) * Input.GetAxis ("Throttle");
-			} else if (Input.GetAxisRaw ("Throttle") < 0f) {
-					myRigidBody.AddRelativeForce (Input.GetAxis ("Throttle") * reverseThrust * Vector3.forward);
+        warp();
+        if (!warping)
+        {
+            if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+            {
+                if (Input.GetAxisRaw("Throttle") > 0f)
+                {
+                    myRigidBody.AddRelativeForce(Input.GetAxis("Throttle") * forwardThrust * Vector3.forward);
+                    handling = baseHandling + (thrustHandling - baseHandling) * Input.GetAxis("Throttle");
+                }
+                else if (Input.GetAxisRaw("Throttle") < 0f)
+                {
+                    myRigidBody.AddRelativeForce(Input.GetAxis("Throttle") * reverseThrust * Vector3.forward);
                     myRigidBody.drag = baseDrag + (brakeDrag - baseDrag) * Mathf.Abs(Input.GetAxis("Throttle"));
-			}
-			if (Input.GetAxisRaw ("Rudder") != 0f) {
-					myRigidBody.AddTorque (Input.GetAxis ("Rudder") * turnRate * Vector3.up);
-			}
-		}
+                }
+                if (Input.GetAxisRaw("Rudder") != 0f)
+                {
+                    myRigidBody.AddTorque(Input.GetAxis("Rudder") * turnRate * Vector3.up);
+                }
+            }
+        }
         float targetTiltAngleZ = -(turnAngleMin + (turnAngleMax - turnAngleMin) * myRigidBody.velocity.magnitude / terminalVelocity) * myRigidBody.angularVelocity.y / terminalAngularVelocity;
         float angleDiffZ = targetTiltAngleZ - transform.eulerAngles.z;
         if (angleDiffZ > 180f)
@@ -86,16 +100,33 @@ public class ShipMovement2D : MonoBehaviour {
         myRigidBody.AddRelativeTorque(angleDiffX, 0f, tiltTorque * angleDiffZ);
         glide();
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (myRigidBody.velocity.magnitude > topSpeed)
+        {
+            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
+        }
+	}
+
+    private void warp()
+    {
+        if (Input.GetAxisRaw("Warp") == 1.0f && !warping)
         {
             startWarpTime = Time.time;
             warpTime = 0f;
             if (myNetworkManager.multiplayerEnabled)
-                Network.Instantiate(warpParticles, transform.position, transform.rotation, 0);
+                Network.Instantiate(warpEnterParticles, transform.position, transform.rotation, 0);
             else
-                Instantiate(warpParticles, transform.position, transform.rotation);
+                Instantiate(warpEnterParticles, transform.position, transform.rotation);
+            warping = true;
         }
-        if (Input.GetKey(KeyCode.I))
+        if (Input.GetAxisRaw("Warp") != 1.0f && warping && myRigidBody.velocity.magnitude >= warpTopSpeed)
+        {
+            if (myNetworkManager.multiplayerEnabled)
+                Network.Instantiate(warpExitParticles, transform.position, transform.rotation, 0);
+            else
+                Instantiate(warpExitParticles, transform.position, transform.rotation);
+            warping = false;
+        }
+        if (warping)
         {
             //transform.position += warpSpeed * (Time.time - startWarpTime) * new Vector3(Mathf.Sin(Mathf.PI / 180f * transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * transform.eulerAngles.y));
             myRigidBody.AddRelativeForce(warpSpeed * (warpTime) * Vector3.forward);
@@ -104,15 +135,9 @@ public class ShipMovement2D : MonoBehaviour {
         }
         else
         {
-            myRigidBody.isKinematic = false;
             topSpeed = baseTopSpeed;
         }
-
-        if (myRigidBody.velocity.magnitude > topSpeed)
-        {
-            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
-        }
-	}
+    }
 	
 	private void glide() {
 		//Add speeds due to handling
