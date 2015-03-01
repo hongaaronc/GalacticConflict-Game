@@ -27,6 +27,7 @@ public class ShipMovement2D : MonoBehaviour {
     public float warpSpeed = 0.5f;
     private float startWarpTime;
     private float warpTime;
+    public GameObject warpParticles;
 	
 	private Rigidbody myRigidBody;
 	private NetworkView myNetworkView;
@@ -89,6 +90,10 @@ public class ShipMovement2D : MonoBehaviour {
         {
             startWarpTime = Time.time;
             warpTime = 0f;
+            if (myNetworkManager.multiplayerEnabled)
+                Network.Instantiate(warpParticles, transform.position, transform.rotation, 0);
+            else
+                Instantiate(warpParticles, transform.position, transform.rotation);
         }
         if (Input.GetKey(KeyCode.I))
         {
