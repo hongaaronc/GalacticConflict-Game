@@ -65,10 +65,10 @@ public class ShipMovement2D : MonoBehaviour {
 	void FixedUpdate() {
         handling = baseHandling;
         myRigidBody.drag = baseDrag;
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        warp();
+        if (!warping)
         {
-            warp();
-            if (!warping)
+            if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
             {
                 if (Input.GetAxisRaw("Throttle") > 0f)
                 {
