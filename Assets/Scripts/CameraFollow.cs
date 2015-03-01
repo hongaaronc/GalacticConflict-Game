@@ -6,11 +6,15 @@ public class CameraFollow : MonoBehaviour {
     public float distance = 60f;
     public float easing = 2f;
     public float leadMultiplier = 5f;
+    public float maxLead = 30f;
 	// Use this for initialization
 	void Start () {
         try
         {
-            transform.position = new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadMultiplier * myTargets[0].velocity;
+            Vector3 leadValue = leadMultiplier * myTargets[0].velocity;
+            if (leadValue.magnitude > maxLead)
+                leadValue = maxLead * leadValue.normalized;
+            transform.position = new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadValue;
         }
         catch { }
 	}
@@ -19,7 +23,10 @@ public class CameraFollow : MonoBehaviour {
 	void Update () {
         try
         {
-            transform.position += ((new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadMultiplier * myTargets[0].velocity) - transform.position) / easing;
+            Vector3 leadValue = leadMultiplier * myTargets[0].velocity;
+            if (leadValue.magnitude > maxLead)
+                leadValue = maxLead * leadValue.normalized;
+            transform.position += ((new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadValue) - transform.position) / easing;
         }
         catch { }
 		transform.eulerAngles = new Vector3 (90f, 0f, 0f);
