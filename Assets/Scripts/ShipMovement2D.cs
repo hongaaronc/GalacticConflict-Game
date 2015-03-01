@@ -12,6 +12,8 @@ public class ShipMovement2D : MonoBehaviour {
 	public float turnRate = 4f;
 
 	public float topSpeed = 9.0f;
+    private float baseTopSpeed;
+    public float warpTopSpeed = 800f;
 	public float topAngularSpeed = 10f;
 	public float turnAngleMin = 20f;
 	public float turnAngleMax = 90f;
@@ -44,6 +46,7 @@ public class ShipMovement2D : MonoBehaviour {
 			terminalAngularVelocity = myRigidBody.maxAngularVelocity;
 		}
         baseDrag = myRigidBody.drag;
+        baseTopSpeed = topSpeed;
 		myNetworkView = GetComponent<NetworkView>();
 		myNetworkManager = Camera.main.GetComponent<NetworkManager> ();
 	}
@@ -92,11 +95,12 @@ public class ShipMovement2D : MonoBehaviour {
             //transform.position += warpSpeed * (Time.time - startWarpTime) * new Vector3(Mathf.Sin(Mathf.PI / 180f * transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * transform.eulerAngles.y));
             myRigidBody.AddRelativeForce(warpSpeed * (warpTime) * Vector3.forward);
             warpTime++;
-            topSpeed = 1000f;
+            topSpeed = warpTopSpeed;
         }
         else
         {
             myRigidBody.isKinematic = false;
+            topSpeed = baseTopSpeed;
         }
 
         if (myRigidBody.velocity.magnitude > topSpeed)
