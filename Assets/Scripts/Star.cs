@@ -8,7 +8,6 @@ public class Star : MonoBehaviour {
     public float warpSpeed = 0.5f;
     public float warpRange = 2f;
     public float warpDistortion = 40f;
-    public bool warpInvertDistortion = true;
     public bool noReverseDistortion = true;
     private float startWarpTime;
 
@@ -24,6 +23,7 @@ public class Star : MonoBehaviour {
         transform.position -= (parallaxMult - 1f) * (Camera.main.transform.position - cameraLastPosition);
         if (Input.GetKeyDown(KeyCode.I))
         {
+            GetComponent<TrailRenderer>().enabled = true;
             startWarpTime = Time.time;
         }
         if (Input.GetKey(KeyCode.I))
@@ -33,11 +33,8 @@ public class Star : MonoBehaviour {
             float warpConst = (warpRange - (transform.position - warpingShip.position).magnitude)/warpRange;
             if (noReverseDistortion && warpConst < 0f)
                 warpConst = 0f;
-            if (warpInvertDistortion)
-                transform.position -= 1f / (1f + warpDistortion * warpConst) * warpSpeed * (Time.time - startWarpTime) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * warpingShip.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * warpingShip.eulerAngles.y));
-            else
-                transform.position -= 1f / (-1f - warpDistortion * warpConst) * warpSpeed * (Time.time - startWarpTime) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * warpingShip.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * warpingShip.eulerAngles.y));
-        }
+                transform.position += 1f / (1f + warpDistortion * warpConst) * warpSpeed * (Time.time - startWarpTime) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * warpingShip.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * warpingShip.eulerAngles.y));
+            }
         else
         {
             GetComponent<TrailRenderer>().enabled = false;

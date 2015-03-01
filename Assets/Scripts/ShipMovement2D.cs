@@ -92,7 +92,7 @@ public class ShipMovement2D : MonoBehaviour {
             //transform.position += warpSpeed * (Time.time - startWarpTime) * new Vector3(Mathf.Sin(Mathf.PI / 180f * transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * transform.eulerAngles.y));
             myRigidBody.AddRelativeForce(warpSpeed * (warpTime) * Vector3.forward);
             warpTime++;
-            topSpeed = 120f;
+            topSpeed = 1000f;
         }
         else
         {
