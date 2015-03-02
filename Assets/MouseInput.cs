@@ -4,6 +4,8 @@ using System.Collections;
 public class MouseInput : MonoBehaviour {
 
     public float sensitivity = 10f;
+    public bool adjustingAllowed = true;
+
 
     public Sprite cursorIdle;
     public Sprite cursorHover;
@@ -17,6 +19,8 @@ public class MouseInput : MonoBehaviour {
     private float targetLastEulerAngle;
     private Vector3 targetRelativePosToCursor = Vector3.zero;
     private float targetRelativeAngToCam;
+    private Vector3 targetPosOffset = Vector3.zero;
+    private float targetAngOffset;
 
     private UnityEngine.UI.Image myImage;
 
@@ -33,7 +37,8 @@ public class MouseInput : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         myImage.sprite = cursorIdle;
-        transform.position += sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
+        if (!isLocked)
+            transform.position += sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
         constrain();
         hoverHandler();
         lockHandler();
@@ -79,6 +84,8 @@ public class MouseInput : MonoBehaviour {
             targetRelativePosToCursor = transform.position - targetRelativePosToCam;
             targetRelativePosToCursor.z = 0f;
             targetRelativeAngToCam = Mathf.Atan2(targetRelativePosToCursor.y, targetRelativePosToCursor.x);
+            targetPosOffset = Vector3.zero;
+            targetAngOffset = 0f;
         }
         else if (Input.GetAxisRaw("CursorLock") == 0.0f && isLocked)
         {
@@ -86,15 +93,18 @@ public class MouseInput : MonoBehaviour {
         }
         if (isLocked)
         {
+            if (adjustingAllowed)
+                targetPosOffset = sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
+
             targetRelativePosToCam = Camera.main.WorldToScreenPoint(lockedTarget.position);
             targetRelativePosToCam.z = 0f;
-            targetRelativePosToCursor = transform.position - targetRelativePosToCam;
+            targetRelativePosToCursor = transform.position + targetPosOffset - targetRelativePosToCam;
             targetRelativePosToCursor.z = 0f;
+            targetRelativeAngToCam = Mathf.Atan2(targetRelativePosToCursor.y, targetRelativePosToCursor.x);
 
-            targetRelativeAngToCam -= (lockedTarget.eulerAngles.y - targetLastEulerAngle) * Mathf.PI / 180f;
-            transform.position = targetRelativePosToCam + targetRelativePosToCursor.magnitude * new Vector3(Mathf.Cos(targetRelativeAngToCam), Mathf.Sin(targetRelativeAngToCam), 0f);
+            targetAngOffset = (lockedTarget.eulerAngles.y - targetLastEulerAngle) * Mathf.PI / 180f;
 
-            transform.position += targetRelativePosToCam - targetLastRelativePosToCam;
+            transform.position = 2f * targetRelativePosToCam - targetLastRelativePosToCam + (targetRelativePosToCursor.magnitude * new Vector3(Mathf.Cos(targetRelativeAngToCam - targetAngOffset), Mathf.Sin(targetRelativeAngToCam - targetAngOffset), 0f));
 
             targetLastRelativePosToCam = targetRelativePosToCam;
             targetLastEulerAngle = lockedTarget.eulerAngles.y;
