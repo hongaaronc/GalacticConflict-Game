@@ -23,26 +23,29 @@ public class Chat : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            EventSystem.current.SetSelectedGameObject(myInputBox.gameObject, null);
-            myInputBox.OnPointerClick(new PointerEventData(EventSystem.current));
+            myInputBox.Select();
         }
     }
 
     public void sendChatMessage()
     {
-        if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
+        if (Input.GetAxisRaw("Submit") == 1.0f)
         {
-            myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, myInputBox.text);
+            if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
+            {
+                myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, myInputBox.text);
+            }
+            else if (!myNetworkManager.multiplayerEnabled)
+            {
+                receiveChatMessage(myInputBox.text);
+            }
         }
-        else if (!myNetworkManager.multiplayerEnabled)
-        {
-            receiveChatMessage(myInputBox.text);
-        }
+        myInputBox.text = "";
     }
 
     [RPC]
     private void receiveChatMessage(string message)
     {
-        myChatBox.text += "Player: " + message + '\n';
+        myChatBox.text = myChatBox.text.Substring(myChatBox.text.IndexOf('\n')+1) + "Player: " + message + '\n';
     }
 }
