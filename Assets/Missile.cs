@@ -53,7 +53,15 @@ public class Missile : MonoBehaviour
             {
                 if (!dead)
                 {
-                    detonate();
+                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
+                    {
+                        myNetworkView.RPC("detonate", RPCMode.AllBuffered);
+                    }
+                    else if (!myNetworkManager.multiplayerEnabled)
+                    {
+                        detonate();
+                    }
+                    dead = true;
                 }
             }
             if (dead)
@@ -83,7 +91,17 @@ public class Missile : MonoBehaviour
                     myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
                 }
                 if ((transform.position - targetVector).magnitude <= detonateRange)
-                    detonate();
+                {
+                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
+                    {
+                        myNetworkView.RPC("detonate", RPCMode.AllBuffered);
+                    }
+                    else if (!myNetworkManager.multiplayerEnabled)
+                    {
+                        detonate();
+                    }
+                    dead = true;
+                }
             }
             else
             {
@@ -92,6 +110,7 @@ public class Missile : MonoBehaviour
         }
     }
 
+    [RPC]
     public void detonate()
     {
         Instantiate(explosion, transform.position, Quaternion.identity);
@@ -100,7 +119,6 @@ public class Missile : MonoBehaviour
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
-        dead = true;
     }
 
     private void glide()

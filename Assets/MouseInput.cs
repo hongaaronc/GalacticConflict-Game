@@ -30,8 +30,8 @@ public class MouseInput : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         myImage = GetComponent<UnityEngine.UI.Image>();
-        Cursor.lockState = CursorLockMode.Confined;
-        //Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         
 	}
 	
@@ -39,10 +39,23 @@ public class MouseInput : MonoBehaviour {
 	void Update () {
         myImage.sprite = cursorIdle;
         if (!isLocked)
-            transform.position += sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
+            transform.position += sensitivity * new Vector3(Input.GetAxisRaw("CursorX"), Input.GetAxisRaw("CursorY"), 0f);
         hoverHandler();
         lockHandler();
         constrain();
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Cursor.lockState != CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 	}
 
     private void constrain()
@@ -97,7 +110,7 @@ public class MouseInput : MonoBehaviour {
             if (!trackRotation)
                 targetLastEulerAngle = lockedTarget.eulerAngles.y;
             if (adjustingAllowed)
-                targetPosOffset = sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
+                targetPosOffset = sensitivity * new Vector3(Input.GetAxisRaw("CursorX"), Input.GetAxisRaw("CursorY"), 0f);
 
             targetRelativePosToCam = Camera.main.WorldToScreenPoint(lockedTarget.position);
             targetRelativePosToCam.z = 0f;
@@ -107,6 +120,8 @@ public class MouseInput : MonoBehaviour {
 
             targetAngOffset = (lockedTarget.eulerAngles.y - targetLastEulerAngle) * Mathf.Deg2Rad;
             transform.position = 2f * targetRelativePosToCam - targetLastRelativePosToCam + (targetRelativePosToCursor.magnitude * new Vector3(Mathf.Cos(targetRelativeAngToCam - targetAngOffset), Mathf.Sin(targetRelativeAngToCam - targetAngOffset), 0f));
+
+            myImage.sprite = cursorHover;
 
             targetLastRelativePosToCam = targetRelativePosToCam;
             targetLastEulerAngle = lockedTarget.eulerAngles.y;
