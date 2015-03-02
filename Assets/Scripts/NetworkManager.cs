@@ -10,7 +10,7 @@ public class NetworkManager : MonoBehaviour {
 
 	void Start() {
 		if (!multiplayerEnabled) {
-			spawnShip ();
+            spawnShip(Resources.Load("Ships/Fighter"));
 		}
 	}
 	private void StartServer()
@@ -22,7 +22,7 @@ public class NetworkManager : MonoBehaviour {
 	void OnServerInitialized()
 	{
 		Debug.Log("Server Initializied");
-		spawnShip ();
+        spawnShip(Resources.Load("Ships/Fighter"));
 	}
 
     void Update()
@@ -75,16 +75,16 @@ public class NetworkManager : MonoBehaviour {
 	
 	void OnConnectedToServer()
 	{
-		spawnShip ();
+		spawnShip (Resources.Load("Ships/Fighter"));
 		Debug.Log("Server Joined");
 	}
 
-	void spawnShip() {
+	void spawnShip(Object shipPrefab) {
 		GameObject newShip;
 		if (multiplayerEnabled)
-            newShip = (GameObject)Network.Instantiate(Resources.Load("Ships/Fighter"), Vector3.zero, Quaternion.identity, 0);
+            newShip = (GameObject)Network.Instantiate(shipPrefab, Vector3.zero, Quaternion.identity, 0);
 		else
-            newShip = (GameObject)Instantiate(Resources.Load("Ships/Fighter"), Vector3.zero, Quaternion.identity);
+            newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
 		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
 	}
 }

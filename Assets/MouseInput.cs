@@ -6,7 +6,7 @@ public class MouseInput : MonoBehaviour {
     public float sensitivity = 10f;
     public bool trackRotation = true;
     public bool adjustingAllowed = true;
-
+    public bool lockMouse = true;
 
     public Sprite cursorIdle;
     public Sprite cursorHover;
@@ -43,7 +43,7 @@ public class MouseInput : MonoBehaviour {
         hoverHandler();
         lockHandler();
         constrain();
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && lockMouse)
         {
             if (Cursor.lockState != CursorLockMode.Locked)
             {

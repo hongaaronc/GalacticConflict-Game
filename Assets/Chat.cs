@@ -21,7 +21,7 @@ public class Chat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetAxisRaw("Chat") == 1.0f)
         {
             myInputBox.Select();
         }
@@ -29,7 +29,7 @@ public class Chat : MonoBehaviour
 
     public void sendChatMessage()
     {
-        if (Input.GetAxisRaw("Submit") == 1.0f)
+        if (Input.GetAxisRaw("Chat") == 1.0f && myInputBox.text != "")
         {
             if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
             {
