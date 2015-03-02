@@ -24,7 +24,8 @@ public class ShipMovement2D : MonoBehaviour {
 	private float terminalAngularVelocity;
 	private float handling;
 
-    public float warpSpeed = 0.5f;
+    public float warpThrust = 0.5f;
+    public float warpPower = 2f;
     private float startWarpTime;
     private float warpTime;
     public GameObject warpEnterParticles;
@@ -129,7 +130,7 @@ public class ShipMovement2D : MonoBehaviour {
         if (warping)
         {
             //transform.position += warpSpeed * (Time.time - startWarpTime) * new Vector3(Mathf.Sin(Mathf.PI / 180f * transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * transform.eulerAngles.y));
-            myRigidBody.AddRelativeForce(warpSpeed * (warpTime) * Vector3.forward);
+            myRigidBody.AddRelativeForce(warpThrust * Mathf.Pow(warpTime, warpPower-1f) * Vector3.forward);
             warpTime++;
             topSpeed = warpTopSpeed;
         }
