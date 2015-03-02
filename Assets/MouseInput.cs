@@ -4,6 +4,7 @@ using System.Collections;
 public class MouseInput : MonoBehaviour {
 
     public float sensitivity = 10f;
+    public bool trackRotation = true;
     public bool adjustingAllowed = true;
 
 
@@ -39,9 +40,9 @@ public class MouseInput : MonoBehaviour {
         myImage.sprite = cursorIdle;
         if (!isLocked)
             transform.position += sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
-        constrain();
         hoverHandler();
         lockHandler();
+        constrain();
 	}
 
     private void constrain()
@@ -93,6 +94,8 @@ public class MouseInput : MonoBehaviour {
         }
         if (isLocked)
         {
+            if (!trackRotation)
+                targetLastEulerAngle = lockedTarget.eulerAngles.y;
             if (adjustingAllowed)
                 targetPosOffset = sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
 
@@ -102,8 +105,7 @@ public class MouseInput : MonoBehaviour {
             targetRelativePosToCursor.z = 0f;
             targetRelativeAngToCam = Mathf.Atan2(targetRelativePosToCursor.y, targetRelativePosToCursor.x);
 
-            targetAngOffset = (lockedTarget.eulerAngles.y - targetLastEulerAngle) * Mathf.PI / 180f;
-
+            targetAngOffset = (lockedTarget.eulerAngles.y - targetLastEulerAngle) * Mathf.Deg2Rad;
             transform.position = 2f * targetRelativePosToCam - targetLastRelativePosToCam + (targetRelativePosToCursor.magnitude * new Vector3(Mathf.Cos(targetRelativeAngToCam - targetAngOffset), Mathf.Sin(targetRelativeAngToCam - targetAngOffset), 0f));
 
             targetLastRelativePosToCam = targetRelativePosToCam;
