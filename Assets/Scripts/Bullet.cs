@@ -13,6 +13,11 @@ public class Bullet : MonoBehaviour {
 	void Update () {
         lifetime -= Time.deltaTime;
         if (lifetime <= 0f)
-            Destroy(gameObject);
+        {
+            if (Camera.main.GetComponent<NetworkManager>().multiplayerEnabled)
+                Network.Destroy(gameObject);
+            else
+                Destroy(gameObject);
+        }
 	}
 }

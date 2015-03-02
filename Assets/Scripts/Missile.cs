@@ -43,19 +43,15 @@ public class Missile : MonoBehaviour
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            //targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //targetVector.y = transform.position.y;
             targetVector = Vector3.zero;
-            transform.LookAt(targetVector);
-            //print (Vector3.Angle(transform.position, targetVector)) ;
-            lifetime -= Time.deltaTime;
+            transform.LookAt(targetVector);            lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
             {
                 if (!dead)
                 {
                     if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
                     {
-                        myNetworkView.RPC("detonate", RPCMode.AllBuffered);
+                        myNetworkView.RPC("detonate", RPCMode.All);
                     }
                     else if (!myNetworkManager.multiplayerEnabled)
                     {
@@ -94,7 +90,7 @@ public class Missile : MonoBehaviour
                 {
                     if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
                     {
-                        myNetworkView.RPC("detonate", RPCMode.AllBuffered);
+                        myNetworkView.RPC("detonate", RPCMode.All);
                     }
                     else if (!myNetworkManager.multiplayerEnabled)
                     {

@@ -113,17 +113,17 @@ public class ShipMovement2D : MonoBehaviour {
             startWarpTime = Time.time;
             warpTime = 0f;
             if (myNetworkManager.multiplayerEnabled)
-                Network.Instantiate(warpEnterParticles, transform.position, transform.rotation, 0);
+                myNetworkView.RPC("onWarpEnter", RPCMode.All);
             else
-                Instantiate(warpEnterParticles, transform.position, transform.rotation);
+                onWarpEnter();
             warping = true;
         }
         if (Input.GetAxisRaw("Warp") != 1.0f && warping && myRigidBody.velocity.magnitude >= warpTopSpeed)
         {
             if (myNetworkManager.multiplayerEnabled)
-                Network.Instantiate(warpExitParticles, transform.position, transform.rotation, 0);
+                myNetworkView.RPC("onWarpExit", RPCMode.All);
             else
-                Instantiate(warpExitParticles, transform.position, transform.rotation);
+                onWarpExit();
             warping = false;
         }
         if (warping)
@@ -155,4 +155,16 @@ public class ShipMovement2D : MonoBehaviour {
 		//sets rigidbody velocity to new velocity
 		myRigidBody.velocity = newVelocity;
 	}
+
+    [RPC]
+    private void onWarpEnter()
+    {
+        Instantiate(warpEnterParticles, transform.position, transform.rotation);
+    }
+
+    [RPC]
+    private void onWarpExit()
+    {
+        Instantiate(warpExitParticles, transform.position, transform.rotation);
+    }
 }
