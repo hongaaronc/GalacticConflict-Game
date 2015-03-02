@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class GUIFocusOnEnter : MonoBehaviour {
+public class TestPanel : MonoBehaviour {
     public GameObject defaultSelected;
 	// Use this for initialization
 	void Start () {
