@@ -41,6 +41,7 @@ public class Chat : MonoBehaviour
             }
         }
         myInputBox.text = "";
+        EventSystem.current.SetSelectedGameObject(null, null);
     }
 
     [RPC]

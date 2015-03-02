@@ -7,6 +7,7 @@ public class NetworkManager : MonoBehaviour {
 	private const string gameName = "SpaceGameRoom";
 	public bool multiplayerEnabled = false;
     private bool hostable = false;
+    public float mySendRate = 1000f;
 
 	void Start() {
 		if (!multiplayerEnabled) {
@@ -21,6 +22,7 @@ public class NetworkManager : MonoBehaviour {
 
 	void OnServerInitialized()
 	{
+        Network.sendRate = mySendRate;
 		Debug.Log("Server Initializied");
         spawnShip(Resources.Load("Ships/Fighter"));
 	}
@@ -75,6 +77,7 @@ public class NetworkManager : MonoBehaviour {
 	
 	void OnConnectedToServer()
 	{
+        Network.sendRate = mySendRate;
 		spawnShip (Resources.Load("Ships/Fighter"));
 		Debug.Log("Server Joined");
 	}
