@@ -29,7 +29,7 @@ public class Chat : MonoBehaviour
 
     public void sendChatMessage()
     {
-        if (Input.GetAxisRaw("Chat") == 1.0f && myInputBox.text != "")
+        if (Input.GetKey(KeyCode.Return) && myInputBox.text != "")
         {
             if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
             {
