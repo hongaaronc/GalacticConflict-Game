@@ -3,42 +3,101 @@ using System.Collections;
 
 public class MouseInput : MonoBehaviour {
 
+    public float sensitivity = 10f;
+
     public Sprite cursorIdle;
     public Sprite cursorHover;
 
-    Vector3 cursorPosition;
-    Vector3 mousePosition = Vector3.zero;
-    Vector3 lastMousePosition = Vector3.zero;
-    Vector3 initialMousePosition = Vector3.zero;
+    private RaycastHit hit;
+
+    private bool isHovered;
+    private bool isLocked = false;
+    private Vector3 targetRelativePosToCam = Vector3.zero;
+    private Vector3 targetLastRelativePosToCam = Vector3.zero;
+    private float targetLastEulerAngle;
+    private Vector3 targetRelativePosToCursor = Vector3.zero;
+    private float targetRelativeAngToCam;
+
+    private UnityEngine.UI.Image myImage;
+
+    private Transform lockedTarget;
 
 	// Use this for initialization
 	void Start () {
-        //Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        //cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //cursorPosition.y = Camera.main.transform.position.y;
-        lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
-        lastMousePosition.y = Camera.main.transform.position.y;
+        myImage = GetComponent<UnityEngine.UI.Image>();
+        Cursor.lockState = CursorLockMode.Confined;
+        //Cursor.visible = false;
+        
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        //Cursor.visible = false;
-        //Cursor.SetCursor(cursorIdle, Vector2.zero, CursorMode.Auto);
-        GetComponent<SpriteRenderer>().sprite = cursorIdle;
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition)-Camera.main.transform.position;
-        mousePosition.y = Camera.main.transform.position.y;
-        transform.position += mousePosition - lastMousePosition;
-        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 10f);
-        Debug.DrawLine(transform.position, transform.position - 100f * Vector3.up, Color.green);
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, 100.0F))
-        {
-            Debug.DrawLine(transform.position, hit.point, Color.red);
-            //Cursor.SetCursor(cursorHover, Vector2.zero, CursorMode.Auto);
-            GetComponent<SpriteRenderer>().sprite = cursorHover;
-            //print("hit");
-        }
-        lastMousePosition = mousePosition;
+        myImage.sprite = cursorIdle;
+        transform.position += sensitivity * new Vector3(Input.GetAxis("CursorX"), Input.GetAxis("CursorY"), 0f);
+        constrain();
+        hoverHandler();
+        lockHandler();
 	}
+
+    private void constrain()
+    {
+        if (transform.position.x < 0f)
+            transform.position = new Vector3(0f, transform.position.y, transform.position.z);
+        if (transform.position.x > Screen.width)
+            transform.position = new Vector3(Screen.width, transform.position.y, transform.position.z);
+        if (transform.position.y < 0f)
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+        if (transform.position.y > Screen.height)
+            transform.position = new Vector3(transform.position.x, Screen.height, transform.position.z);
+    }
+
+    private void hoverHandler()
+    {
+        Vector3 myWorldPoint = Camera.main.ScreenToWorldPoint(transform.position);
+        Debug.DrawLine(myWorldPoint, myWorldPoint - 100f * Vector3.up, Color.green);
+        if (Physics.Raycast(myWorldPoint, -Vector3.up, out hit, 100.0F))
+        {
+            isHovered = true;
+            Debug.DrawLine(myWorldPoint, hit.point, Color.red);
+            myImage.sprite = cursorHover;
+        }
+        else
+        {
+            isHovered = false;
+        }
+    }
+
+    private void lockHandler()
+    {
+        if (Input.GetAxisRaw("CursorLock") == 1.0f && isHovered & !isLocked) {
+            isLocked = true;
+            lockedTarget = hit.transform;
+            targetRelativePosToCam = Camera.main.WorldToScreenPoint(lockedTarget.position);
+            targetRelativePosToCam.z = 0f;
+            targetLastRelativePosToCam = targetRelativePosToCam;
+            targetLastEulerAngle = lockedTarget.eulerAngles.y;
+            targetRelativePosToCursor = transform.position - targetRelativePosToCam;
+            targetRelativePosToCursor.z = 0f;
+            targetRelativeAngToCam = Mathf.Atan2(targetRelativePosToCursor.y, targetRelativePosToCursor.x);
+        }
+        else if (Input.GetAxisRaw("CursorLock") == 0.0f && isLocked)
+        {
+            isLocked = false;
+        }
+        if (isLocked)
+        {
+            targetRelativePosToCam = Camera.main.WorldToScreenPoint(lockedTarget.position);
+            targetRelativePosToCam.z = 0f;
+            targetRelativePosToCursor = transform.position - targetRelativePosToCam;
+            targetRelativePosToCursor.z = 0f;
+
+            targetRelativeAngToCam -= (lockedTarget.eulerAngles.y - targetLastEulerAngle) * Mathf.PI / 180f;
+            transform.position = targetRelativePosToCam + targetRelativePosToCursor.magnitude * new Vector3(Mathf.Cos(targetRelativeAngToCam), Mathf.Sin(targetRelativeAngToCam), 0f);
+
+            transform.position += targetRelativePosToCam - targetLastRelativePosToCam;
+
+            targetLastRelativePosToCam = targetRelativePosToCam;
+            targetLastEulerAngle = lockedTarget.eulerAngles.y;
+        }
+    }
 }
