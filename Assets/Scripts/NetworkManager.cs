@@ -3,10 +3,9 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 
-	private const string typeName = "AaronsSpaceGame";
-	private const string gameName = "SpaceGameRoom";
+	public string typeName = "AaronsSpaceGame";
+    public string gameName = "Room";
 	public bool multiplayerEnabled = false;
-    private bool hostable = false;
     public float mySendRate = 1000f;
 
 	void Start() {
@@ -14,7 +13,7 @@ public class NetworkManager : MonoBehaviour {
             spawnShip(Resources.Load("Ships/Fighter"));
 		}
 	}
-	private void StartServer()
+	public void StartServer()
 	{
 		Network.InitializeServer(4, 25000, !Network.HavePublicAddress());
 		MasterServer.RegisterHost (typeName, gameName);
@@ -29,17 +28,15 @@ public class NetworkManager : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Pause))
-            hostable = true;
     }
 
 	void OnGUI()
 	{
+        /*
 		if (multiplayerEnabled && !Network.isClient && !Network.isServer)
 		{
-            if (hostable)
-			    if (GUI.Button(new Rect(100, 100, 250, 100), "Start Server"))
-				    StartServer();
+			if (GUI.Button(new Rect(100, 100, 250, 100), "Start Server"))
+				StartServer();
 			
 			if (GUI.Button(new Rect(100, 250, 250, 100), "Refresh Hosts"))
 				RefreshHostList();
@@ -54,12 +51,12 @@ public class NetworkManager : MonoBehaviour {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
-	private HostData[] hostList;
+	public HostData[] hostList;
 	
-	private void RefreshHostList()
+	public void RefreshHostList()
 	{
 		MasterServer.RequestHostList(typeName);
 	}
@@ -70,7 +67,7 @@ public class NetworkManager : MonoBehaviour {
 			hostList = MasterServer.PollHostList();
 	}
 
-	private void JoinServer(HostData hostData)
+	public void JoinServer(HostData hostData)
 	{
 		Network.Connect(hostData);
 	}
