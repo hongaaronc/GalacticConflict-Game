@@ -33,10 +33,6 @@ public class NetworkManager : MonoBehaviour {
     void Update()
     {
     }
-
-	void OnGUI()
-	{
-	}
 	
 	public HostData[] hostList;
 	
