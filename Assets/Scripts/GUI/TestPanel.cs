@@ -83,9 +83,15 @@ public class TestPanel : MonoBehaviour {
         print("Host list received");
         if (refreshing)
         {
+            float i=0f;
             foreach (HostData host in hostList)
             {
                 GameObject newButton = (GameObject) Instantiate(Resources.Load("GUI/GUIButton"), Vector3.zero, Quaternion.identity);
+                newButton.transform.parent = transform;
+                newButton.transform.localPosition = new Vector3(0f, -35f * i, 0f);
+                newButton.GetComponentInChildren<UnityEngine.UI.Text>().text = host.gameName;
+                newButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { myNetworkManager.JoinServer(host); });
+                i++;
             }
             refreshing = false;
         }
