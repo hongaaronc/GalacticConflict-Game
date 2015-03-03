@@ -5,7 +5,8 @@ public class Star : MonoBehaviour {
 	public float range = 100f;
     public float parallaxMult = 1f;
 
-    public float warpSpeed = 5f;
+    public float warpThrust = 5f;
+    public float warpPower = 2f;
     public float warpRange = 2f;
     public float warpDistortion = 40f;
     public bool noReverseDistortion = true;
@@ -36,7 +37,7 @@ public class Star : MonoBehaviour {
                 float warpConst = (warpRange - (transform.position - mainShip.position).magnitude) / warpRange;
                 if (noReverseDistortion && warpConst < 0f)
                     warpConst = 0f;
-                transform.position += 1f / (1f + warpDistortion * warpConst) * warpSpeed * (Time.time - startWarpTime) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * mainShip.transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * mainShip.transform.eulerAngles.y));
+                transform.position += 1f / (1f + warpDistortion * warpConst) * warpThrust * Mathf.Pow(Time.time - startWarpTime, warpPower - 1f) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * mainShip.transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * mainShip.transform.eulerAngles.y));
             }
             else
             {
