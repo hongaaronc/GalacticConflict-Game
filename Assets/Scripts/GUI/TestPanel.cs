@@ -51,6 +51,14 @@ public class TestPanel : MonoBehaviour {
         }
 	}
 
+    public void startOffline()
+    {
+        if (!Network.isClient && !Network.isServer && myNetworkManager.multiplayerEnabled)
+        {
+            myNetworkManager.StartOffline();
+        }
+    }
+
     public void startServer()
     {
         if (!Network.isClient && !Network.isServer && myNetworkManager.multiplayerEnabled)
@@ -60,10 +68,12 @@ public class TestPanel : MonoBehaviour {
     }
 
     private HostData[] hostList;
+    private bool refreshing = false;
 
     public void refreshServers()
     {
         MasterServer.RequestHostList(myNetworkManager.typeName);
+        refreshing = true;
     }
 
     void OnMasterServerEvent(MasterServerEvent msEvent)
@@ -71,9 +81,13 @@ public class TestPanel : MonoBehaviour {
         if (msEvent == MasterServerEvent.HostListReceived)
             hostList = MasterServer.PollHostList();
         print("Host list received");
-        foreach (HostData host in hostList)
+        if (refreshing)
         {
-            print(host.gameName);
+            foreach (HostData host in hostList)
+            {
+                GameObject newButton = (GameObject) Instantiate(Resources.Load("GUI/GUIButton"), Vector3.zero, Quaternion.identity);
+            }
+            refreshing = false;
         }
     }
 }

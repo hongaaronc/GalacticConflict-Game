@@ -9,10 +9,14 @@ public class NetworkManager : MonoBehaviour {
     public float mySendRate = 1000f;
 
 	void Start() {
-		if (!multiplayerEnabled) {
-            spawnShip(Resources.Load("Ships/Fighter"));
-		}
 	}
+
+    public void StartOffline()
+    {
+        multiplayerEnabled = false;
+        spawnShip(Resources.Load("Ships/Fighter"));
+    }
+
 	public void StartServer()
 	{
 		Network.InitializeServer(4, 25000, !Network.HavePublicAddress());
