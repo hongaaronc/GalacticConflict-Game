@@ -10,6 +10,7 @@ public class Missile : MonoBehaviour
     public float lifetime = 1f;
     public float deathTime = 1f;
     public GameObject explosion;
+    public GameObject deathParticle;
     public ParticleSystem[] particleSystems;
 
     public float topSpeed = 9.0f;
@@ -22,6 +23,11 @@ public class Missile : MonoBehaviour
     private Rigidbody myRigidBody;
     private NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
+
+    void OnValidate()
+    {
+        handling = Mathf.Clamp(handling, 0f, 1f);
+    }
 
     // Use this for initialization
     void Start()
@@ -44,7 +50,8 @@ public class Missile : MonoBehaviour
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
             targetVector = Vector3.zero;
-            transform.LookAt(targetVector);            lifetime -= Time.deltaTime;
+            transform.LookAt(targetVector);
+            lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
             {
                 if (!dead)
@@ -55,7 +62,7 @@ public class Missile : MonoBehaviour
                     }
                     else if (!myNetworkManager.multiplayerEnabled)
                     {
-                        detonate();
+                        die();
                     }
                     dead = true;
                 }
@@ -82,10 +89,7 @@ public class Missile : MonoBehaviour
             {
                 myRigidBody.AddRelativeForce(thrust * Vector3.forward);
                 glide();
-                if (myRigidBody.velocity.magnitude > topSpeed)
-                {
-                    myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
-                }
+                myRigidBody.velocity = Vector3.ClampMagnitude(myRigidBody.velocity, topSpeed);
                 if ((transform.position - targetVector).magnitude <= detonateRange)
                 {
                     if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
@@ -110,6 +114,17 @@ public class Missile : MonoBehaviour
     public void detonate()
     {
         Instantiate(explosion, transform.position, Quaternion.identity);
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            ps.emissionRate = 0f;
+        }
+        myRigidBody.velocity = Vector3.zero;
+    }
+
+    [RPC]
+    public void die()
+    {
+        Instantiate(deathParticle, transform.position, Quaternion.identity);
         foreach (ParticleSystem ps in particleSystems)
         {
             ps.emissionRate = 0f;

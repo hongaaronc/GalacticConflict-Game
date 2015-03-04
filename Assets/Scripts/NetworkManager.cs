@@ -7,6 +7,7 @@ public class NetworkManager : MonoBehaviour {
     public string gameName = "Room";
 	public bool multiplayerEnabled = false;
     public float mySendRate = 1000f;
+    public Object shipPrefab;
 
 	void Start() {
 	}
@@ -14,7 +15,7 @@ public class NetworkManager : MonoBehaviour {
     public void StartOffline()
     {
         multiplayerEnabled = false;
-        spawnShip(Resources.Load("Ships/Fighter"));
+        spawnShip();
     }
 
 	public void StartServer()
@@ -27,7 +28,7 @@ public class NetworkManager : MonoBehaviour {
 	{
         Network.sendRate = mySendRate;
 		Debug.Log("Server Initializied");
-        spawnShip(Resources.Load("Ships/Fighter"));
+        spawnShip();
 	}
 
     void Update()
@@ -55,11 +56,11 @@ public class NetworkManager : MonoBehaviour {
 	void OnConnectedToServer()
 	{
         Network.sendRate = mySendRate;
-		spawnShip (Resources.Load("Ships/Fighter"));
+		spawnShip ();
 		Debug.Log("Server Joined");
 	}
 
-	void spawnShip(Object shipPrefab) {
+	void spawnShip() {
 		GameObject newShip;
 		if (multiplayerEnabled)
             newShip = (GameObject)Network.Instantiate(shipPrefab, Vector3.zero, Quaternion.identity, 0);

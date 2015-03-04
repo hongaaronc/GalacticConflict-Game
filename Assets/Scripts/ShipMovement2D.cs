@@ -36,6 +36,13 @@ public class ShipMovement2D : MonoBehaviour {
 	private NetworkView myNetworkView;
 	private NetworkManager myNetworkManager;
 
+    void OnValidate()
+    {
+        baseHandling = Mathf.Clamp(baseHandling, 0f, 1f);
+        thrustHandling = Mathf.Clamp(thrustHandling, 0f, 1f);
+        warpPower = Mathf.Clamp(warpPower, 1f, float.PositiveInfinity);
+    }
+
 	// Use this for initialization
 	void Start () {
 		myRigidBody = GetComponent<Rigidbody> ();
@@ -101,10 +108,7 @@ public class ShipMovement2D : MonoBehaviour {
         myRigidBody.AddRelativeTorque(angleDiffX, 0f, tiltTorque * angleDiffZ);
         glide();
 
-        if (myRigidBody.velocity.magnitude > topSpeed)
-        {
-            myRigidBody.velocity = topSpeed * myRigidBody.velocity.normalized;
-        }
+        myRigidBody.velocity = Vector3.ClampMagnitude(myRigidBody.velocity, topSpeed);
 	}
 
     private void warp()
