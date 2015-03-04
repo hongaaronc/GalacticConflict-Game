@@ -53,6 +53,8 @@ public class TestPanel : MonoBehaviour {
             connectionText.color = new Color(1f, 1f, 1f, 0.5f);
             connectionText.fontSize = 14;
         }
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F))
+            Screen.fullScreen = !Screen.fullScreen;
 	}
 
     public void startOffline()
