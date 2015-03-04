@@ -32,7 +32,7 @@ public class Missile : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //targetVector = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        targetVector = Camera.main.GetComponent<CameraFollow>().mousePosition;
         //targetVector.y = transform.position.y;
         myRigidBody = GetComponent<Rigidbody>();
         myRigidBody.maxAngularVelocity = topAngularSpeed;
@@ -49,7 +49,6 @@ public class Missile : MonoBehaviour
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            targetVector = Vector3.zero;
             transform.LookAt(targetVector);
             lifetime -= Time.deltaTime;
             if (lifetime <= 0f)

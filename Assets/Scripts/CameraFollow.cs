@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour {
 	public Rigidbody[] myTargets;
+    public Transform GUIcursor;
+    public Vector3 mousePosition;
     public float distance = 60f;
     public float easing = 2f;
     public float leadMultiplier = 5f;
@@ -26,5 +28,8 @@ public class CameraFollow : MonoBehaviour {
         }
         catch { }
 		transform.eulerAngles = new Vector3 (90f, 0f, 0f);
+
+        mousePosition = Camera.main.ScreenToWorldPoint(GUIcursor.position);
+        mousePosition.y = 0f;
 	}
 }
