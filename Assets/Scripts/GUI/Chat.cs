@@ -27,21 +27,27 @@ public class Chat : MonoBehaviour
         }
     }
 
-    public void sendChatMessage()
+    public void inputChatMessage()
     {
+        sendChatMessage(myInputBox.text);
         if (Input.GetKey(KeyCode.Return) && myInputBox.text != "")
         {
-            if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
-            {
-                myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, myInputBox.text);
-            }
-            else if (!myNetworkManager.multiplayerEnabled)
-            {
-                receiveChatMessage(myInputBox.text);
-            }
+            sendChatMessage(myInputBox.text);
         }
         myInputBox.text = "";
         EventSystem.current.SetSelectedGameObject(null, null);
+    }
+
+    public void sendChatMessage(string message)
+    {
+        if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
+        {
+            myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, message);
+        }
+        else if (!myNetworkManager.multiplayerEnabled)
+        {
+            receiveChatMessage(message);
+        }
     }
 
     [RPC]

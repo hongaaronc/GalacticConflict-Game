@@ -111,13 +111,13 @@ public class TestPanel : MonoBehaviour {
 
     void OnServerInitialized()
     {
-        myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, "Server started");
+        myChat.sendChatMessage("Server started");
         myNetworkManager.spawnShip();
     }
 
     void OnConnectedToServer()
     {
-        myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, "Player has joined the game");
+        myChat.sendChatMessage("Player has joined the game");
         myNetworkManager.spawnShip();
     }
 }
