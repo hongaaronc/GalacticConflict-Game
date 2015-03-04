@@ -27,9 +27,16 @@ public class NetworkManager : MonoBehaviour {
 	void OnServerInitialized()
 	{
         Network.sendRate = mySendRate;
-		Debug.Log("Server Initializied");
-        spawnShip();
+		//Debug.Log("Server Initializied");
+        //spawnShip();
 	}
+
+    void OnConnectedToServer()
+    {
+        Network.sendRate = mySendRate;
+        //spawnShip();
+        //Debug.Log("Server Joined");
+    }
 
     void Update()
     {
@@ -52,15 +59,8 @@ public class NetworkManager : MonoBehaviour {
 	{
 		Network.Connect(hostData);
 	}
-	
-	void OnConnectedToServer()
-	{
-        Network.sendRate = mySendRate;
-		spawnShip ();
-		Debug.Log("Server Joined");
-	}
 
-	void spawnShip() {
+	public void spawnShip() {
 		GameObject newShip;
 		if (multiplayerEnabled)
             newShip = (GameObject)Network.Instantiate(shipPrefab, Vector3.zero, Quaternion.identity, 0);

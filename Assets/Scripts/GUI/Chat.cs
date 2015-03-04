@@ -45,7 +45,7 @@ public class Chat : MonoBehaviour
     }
 
     [RPC]
-    private void receiveChatMessage(string message)
+    public void receiveChatMessage(string message)
     {
         myChatBox.text = myChatBox.text.Substring(myChatBox.text.IndexOf('\n')+1) + "Player: " + message + '\n';
     }

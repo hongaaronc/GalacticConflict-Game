@@ -6,9 +6,13 @@ public class TestPanel : MonoBehaviour {
     public GameObject defaultSelected;
     public UnityEngine.UI.Text connectionText;
 
+    public Chat myChat;
+
+    private NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
 	// Use this for initialization
 	void Start () {
+        myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
 	
@@ -95,5 +99,17 @@ public class TestPanel : MonoBehaviour {
             }
             refreshing = false;
         }
+    }
+
+    void OnServerInitialized()
+    {
+        myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, "Server started");
+        myNetworkManager.spawnShip();
+    }
+
+    void OnConnectedToServer()
+    {
+        myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, "Player has joined the game");
+        myNetworkManager.spawnShip();
     }
 }
