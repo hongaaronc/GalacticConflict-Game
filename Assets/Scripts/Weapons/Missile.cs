@@ -58,7 +58,7 @@ public class Missile : MonoBehaviour
                 {
                     if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
                     {
-                        myNetworkView.RPC("detonate", RPCMode.All);
+                        myNetworkView.RPC("die", RPCMode.All);
                     }
                     else if (!myNetworkManager.multiplayerEnabled)
                     {

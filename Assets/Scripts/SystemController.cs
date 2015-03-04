@@ -7,6 +7,11 @@ public class SystemController : MonoBehaviour {
 
     private NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
+
+    void OnValidate()
+    {
+        abilityNum = Mathf.Clamp(abilityNum, 0, 4);
+    }
 	// Use this for initialization
 	void Start () {
         myNetworkView = GetComponent<NetworkView>();

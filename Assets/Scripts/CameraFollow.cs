@@ -11,9 +11,7 @@ public class CameraFollow : MonoBehaviour {
 	void Start () {
         try
         {
-            Vector3 leadValue = leadMultiplier * myTargets[0].velocity;
-            if (leadValue.magnitude > maxLead)
-                leadValue = maxLead * leadValue.normalized;
+            Vector3 leadValue = Vector3.ClampMagnitude(leadMultiplier * myTargets[0].velocity, maxLead);
             transform.position = new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadValue;
         }
         catch { }
@@ -23,9 +21,7 @@ public class CameraFollow : MonoBehaviour {
 	void Update () {
         try
         {
-            Vector3 leadValue = leadMultiplier * myTargets[0].velocity;
-            if (leadValue.magnitude > maxLead)
-                leadValue = maxLead * leadValue.normalized;
+            Vector3 leadValue = Vector3.ClampMagnitude(leadMultiplier * myTargets[0].velocity, maxLead);
             transform.position += ((new Vector3(myTargets[0].transform.position.x, distance, myTargets[0].transform.position.z) + leadValue) - transform.position) / easing;
         }
         catch { }

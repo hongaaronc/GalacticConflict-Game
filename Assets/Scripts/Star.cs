@@ -2,8 +2,13 @@
 using System.Collections;
 
 public class Star : MonoBehaviour {
-	public float range = 100f;
-    public float parallaxMult = 1f;
+    public float brightnessBase = 1.5f;
+    public float brightnessRandMin = 0.8f;
+    public float brightnessRandMax = 3f;
+
+    private float parallaxMult = 1f;
+    private float parallaxMultMin = 0.2f;
+    private float parallaxMultMax = 1.0f;
 
     public float warpThrust = 5f;
     public float warpPower = 2f;
@@ -14,10 +19,16 @@ public class Star : MonoBehaviour {
     private bool warpingLastFrame = false;
 
     private Vector3 cameraLastPosition;
+
+    void OnValidate()
+    {
+        warpPower = Mathf.Clamp(warpPower, 1f, float.PositiveInfinity);
+    }
+
 	// Use this for initialization
 	void Start () {
-        parallaxMult = Random.Range(0.2f, 1.0f);
-        GetComponent<LensFlare>().brightness = Random.Range(0.8f, 3f) + 1.5f * parallaxMult;
+        parallaxMult = Random.Range(parallaxMultMin, parallaxMultMax);
+        GetComponent<LensFlare>().brightness = Random.Range(brightnessRandMin, brightnessRandMax) + brightnessBase * parallaxMult;
 	}
 	
 	// Update is called once per frame
@@ -35,8 +46,8 @@ public class Star : MonoBehaviour {
             {
                 GetComponent<TrailRenderer>().enabled = true;
                 float warpConst = (warpRange - (transform.position - mainShip.position).magnitude) / warpRange;
-                if (noReverseDistortion && warpConst < 0f)
-                    warpConst = 0f;
+                if (noReverseDistortion)
+                    warpConst = Mathf.Clamp(warpConst, 0f, float.PositiveInfinity);
                 transform.position += 1f / (1f + warpDistortion * warpConst) * warpThrust * Mathf.Pow(Time.time - startWarpTime, warpPower - 1f) * (parallaxMult - 1f) * new Vector3(Mathf.Sin(Mathf.PI / 180f * mainShip.transform.eulerAngles.y), 0f, Mathf.Cos(Mathf.PI / 180f * mainShip.transform.eulerAngles.y));
             }
             else
@@ -54,27 +65,26 @@ public class Star : MonoBehaviour {
         if (transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height)
         {
             transform.position -= 2f * new Vector3(Camera.main.orthographicSize * Screen.width / Screen.height, 0f, 0f);
-            parallaxMult = Random.Range(0.2f, 1.0f);
-            GetComponent<LensFlare>().brightness = Random.Range(0.8f, 3f) + 1.5f * parallaxMult;
+            parallaxMult = Random.Range(parallaxMultMin, parallaxMultMax);
+            GetComponent<LensFlare>().brightness = Random.Range(brightnessRandMin, brightnessRandMax) + brightnessBase * parallaxMult;
         }
         else if (transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize * Screen.width / Screen.height)
         {
             transform.position += 2f * new Vector3(Camera.main.orthographicSize * Screen.width / Screen.height, 0f, 0f);
-            parallaxMult = Random.Range(0.2f, 1.0f);
-            GetComponent<LensFlare>().brightness = Random.Range(0.8f, 3f) + 1.5f * parallaxMult;
+            parallaxMult = Random.Range(parallaxMultMin, parallaxMultMax);
+            GetComponent<LensFlare>().brightness = Random.Range(brightnessRandMin, brightnessRandMax) + brightnessBase * parallaxMult;
         }
         if (transform.position.z > Camera.main.transform.position.z + Camera.main.orthographicSize)
         {
             transform.position -= 2f * new Vector3(0f, 0f, Camera.main.orthographicSize);
-            parallaxMult = Random.Range(0.2f, 1.0f);
-            GetComponent<LensFlare>().brightness = Random.Range(0.8f, 3f) + 1.5f * parallaxMult;
+            parallaxMult = Random.Range(parallaxMultMin, parallaxMultMax);
+            GetComponent<LensFlare>().brightness = Random.Range(brightnessRandMin, brightnessRandMax) + brightnessBase * parallaxMult;
         }
         else if (transform.position.z < Camera.main.transform.position.z - Camera.main.orthographicSize)
         {
             transform.position += 2f * new Vector3(0f, 0f, Camera.main.orthographicSize);
-            parallaxMult = Random.Range(0.2f, 1.0f);
-            GetComponent<LensFlare>().brightness = Random.Range(0.8f, 3f) + 1.5f * parallaxMult;
-
+            parallaxMult = Random.Range(parallaxMultMin, parallaxMultMax);
+            GetComponent<LensFlare>().brightness = Random.Range(brightnessRandMin, brightnessRandMax) + brightnessBase * parallaxMult;
         }
     }
 }
