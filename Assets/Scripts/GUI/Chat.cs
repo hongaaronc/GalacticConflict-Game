@@ -41,12 +41,22 @@ public class Chat : MonoBehaviour
     {
         if (myNetworkManager.multiplayerEnabled)
         {
+            if (myNetworkView.isMine)
+            {
+                myNetworkView.RPC("checkHostCommands", RPCMode.AllBuffered);
+            }
             myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, message);
         }
         else if (!myNetworkManager.multiplayerEnabled)
         {
             receiveChatMessage(message);
         }
+    }
+
+    [RPC]
+    public void checkHostCommands()
+    {
+        
     }
 
     [RPC]
