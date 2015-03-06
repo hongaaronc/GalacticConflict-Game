@@ -29,7 +29,6 @@ public class Chat : MonoBehaviour
 
     public void inputChatMessage()
     {
-        sendChatMessage(myInputBox.text);
         if (Input.GetKey(KeyCode.Return) && myInputBox.text != "")
         {
             sendChatMessage(myInputBox.text);
