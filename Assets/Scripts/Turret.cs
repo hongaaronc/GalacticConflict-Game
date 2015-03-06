@@ -14,7 +14,7 @@ public class Turret : MonoBehaviour {
 	void Start () {
         targetVector = Camera.main.GetComponent<CameraFollow>().mousePosition;
 
-        parentedAngleOffset += GetComponentInParent<Transform>().localEulerAngles.y;
+        parentedAngleOffset = transform.eulerAngles.y - transform.localEulerAngles.y + 90f;
 
         myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
