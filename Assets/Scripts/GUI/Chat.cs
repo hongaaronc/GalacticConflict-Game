@@ -39,7 +39,7 @@ public class Chat : MonoBehaviour
 
     public void sendChatMessage(string message)
     {
-        if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
+        if (myNetworkManager.multiplayerEnabled)
         {
             myNetworkView.RPC("receiveChatMessage", RPCMode.AllBuffered, message);
         }
