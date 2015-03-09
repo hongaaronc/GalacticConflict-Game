@@ -25,7 +25,7 @@ public class MouseInput : MonoBehaviour {
 
     private UnityEngine.UI.Image myImage;
 
-    private Transform lockedTarget;
+    public Transform lockedTarget = null;
 
 	// Use this for initialization
 	void Start () {
@@ -102,6 +102,7 @@ public class MouseInput : MonoBehaviour {
         }
         else if (Input.GetAxisRaw("CursorLock") == 0.0f && isLocked)
         {
+            lockedTarget = null;
             isLocked = false;
         }
         if (isLocked)

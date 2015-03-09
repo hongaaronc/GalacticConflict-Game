@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Missile : MonoBehaviour
 {
-    public Vector3 targetVector;
     public float fireForce;
     public float thrust;
     public float detonateRange = 0.2f;
@@ -20,6 +19,8 @@ public class Missile : MonoBehaviour
 
     private bool dead = false;
 
+    private GameObject myTarget;
+
     private Rigidbody myRigidBody;
     private NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
@@ -32,16 +33,21 @@ public class Missile : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        targetVector = Camera.main.GetComponent<CameraFollow>().mousePosition;
-        //targetVector.y = transform.position.y;
         myRigidBody = GetComponent<Rigidbody>();
+        myNetworkView = GetComponent<NetworkView>();
+        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
+
         myRigidBody.maxAngularVelocity = topAngularSpeed;
         myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
         myRigidBody.AddRelativeForce(Random.Range(-3.2f, 3.2f) * Vector3.right);
         myRigidBody.AddTorque(Random.Range(-30.0f, 30.0f) * Vector3.up);
 
-        myNetworkView = GetComponent<NetworkView>();
-        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
+        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        {
+            myTarget = new GameObject("Target");
+            myTarget.transform.position = Camera.main.GetComponent<ControlsHandler>().mousePosition;
+            myTarget.transform.parent = Camera.main.GetComponent<ControlsHandler>().target;
+        }
     }
 
     // Update is called once per frame
@@ -49,7 +55,7 @@ public class Missile : MonoBehaviour
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            transform.LookAt(targetVector);
+            transform.LookAt(myTarget.transform.position);
             lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
             {
@@ -71,6 +77,7 @@ public class Missile : MonoBehaviour
                 deathTime -= Time.deltaTime;
                 if (deathTime <= 0f)
                 {
+                    Destroy(myTarget);
                     if (myNetworkManager.multiplayerEnabled)
                         Network.Destroy(gameObject);
                     else
@@ -89,7 +96,7 @@ public class Missile : MonoBehaviour
                 myRigidBody.AddRelativeForce(thrust * Vector3.forward);
                 glide();
                 myRigidBody.velocity = Vector3.ClampMagnitude(myRigidBody.velocity, topSpeed);
-                if ((transform.position - targetVector).magnitude <= detonateRange)
+                if ((transform.position - myTarget.transform.position).magnitude <= detonateRange)
                 {
                     if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
                     {
