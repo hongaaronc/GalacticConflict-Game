@@ -9,7 +9,7 @@ public class ShipMovement2D : MonoBehaviour {
 	public float brakeDrag = 10f;
 	public float baseHandling = 0.2f;
 	public float thrustHandling = 0.1f;
-	public float turnRate = 4f;
+	public float turnTorque = 4f;
 
 	public float topSpeed = 9.0f;
     private float baseTopSpeed;
@@ -47,8 +47,8 @@ public class ShipMovement2D : MonoBehaviour {
 	void Start () {
 		myRigidBody = GetComponent<Rigidbody> ();
         terminalVelocity = forwardThrust / (myRigidBody.mass * myRigidBody.drag);
-		terminalAngularVelocity = ((turnRate / myRigidBody.angularDrag) - Time.fixedDeltaTime * turnRate) / myRigidBody.mass;
-        terminalAngularVelocity = turnRate / (myRigidBody.mass * myRigidBody.angularDrag);
+		terminalAngularVelocity = ((turnTorque / myRigidBody.angularDrag) - Time.fixedDeltaTime * turnTorque) / myRigidBody.mass;
+        terminalAngularVelocity = turnTorque / (myRigidBody.mass * myRigidBody.angularDrag);
 		if (terminalVelocity > topSpeed) {
 			terminalVelocity = topSpeed;
 		}
@@ -90,7 +90,7 @@ public class ShipMovement2D : MonoBehaviour {
                 }
                 if (Input.GetAxisRaw("Rudder") != 0f)
                 {
-                    myRigidBody.AddTorque(Input.GetAxis("Rudder") * turnRate * Vector3.up);
+                    myRigidBody.AddTorque(Input.GetAxis("Rudder") * turnTorque * Vector3.up);
                 }
             }
         }

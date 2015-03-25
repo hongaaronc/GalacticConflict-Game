@@ -4,7 +4,13 @@ using System.Collections;
 public class Missile : MonoBehaviour
 {
     public float fireForce;
+    public float fireRandomForce = 3.2f;
+    public float fireRandomTorque = 30f;
+    public float fireRandomAngle = 30f;
+
     public float thrust;
+    public float turnRate;
+
     public float detonateRange = 0.2f;
     public float lifetime = 1f;
     public float deathTime = 1f;
@@ -39,8 +45,9 @@ public class Missile : MonoBehaviour
 
         myRigidBody.maxAngularVelocity = topAngularSpeed;
         myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
-        myRigidBody.AddRelativeForce(Random.Range(-3.2f, 3.2f) * Vector3.right);
-        myRigidBody.AddTorque(Random.Range(-30.0f, 30.0f) * Vector3.up);
+        myRigidBody.AddRelativeForce(Random.Range(-fireRandomForce, fireRandomForce) * Vector3.right);
+        myRigidBody.AddTorque(Random.Range(-fireRandomTorque, fireRandomTorque) * Vector3.up);
+        transform.Rotate(Vector3.up, Random.Range(-fireRandomAngle, fireRandomAngle));
 
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
@@ -55,7 +62,6 @@ public class Missile : MonoBehaviour
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
-            transform.LookAt(myTarget.transform.position);
             lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
             {
@@ -93,6 +99,7 @@ public class Missile : MonoBehaviour
         {
             if (!dead)
             {
+                home();
                 myRigidBody.AddRelativeForce(thrust * Vector3.forward);
                 glide();
                 myRigidBody.velocity = Vector3.ClampMagnitude(myRigidBody.velocity, topSpeed);
@@ -155,5 +162,11 @@ public class Missile : MonoBehaviour
 
         //sets rigidbody velocity to new velocity
         myRigidBody.velocity = newVelocity;
+    }
+
+    private void home()
+    {
+        float targetAngle = Mathf.Atan2(transform.position.z - myTarget.transform.position.z, myTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg + 90f;
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnRate), transform.eulerAngles.z);
     }
 }
