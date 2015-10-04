@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 public class CameraFollow : MonoBehaviour {
@@ -24,6 +25,16 @@ public class CameraFollow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (myTargets[0] == null)
+        {
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+            {
+                if (go.GetComponent<NetworkIdentity>() != null)
+                    if (go.GetComponent<NetworkIdentity>().hasAuthority)
+                        myTargets[0] = go.GetComponent<Rigidbody>();
+            }
+        }
+
         if (Input.GetMouseButton(1))
             freeCam = true;
         else

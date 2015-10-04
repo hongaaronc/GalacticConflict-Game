@@ -28,7 +28,7 @@ public class WeaponSystem : GenericSystem {
                     if (time == timer)
                     {
                         foreach (string weapon in myWeapons) {
-                            ((WeaponSystemController)systemController).CmdSpawnWeapon(weapon, transform.position, transform.rotation, inheritVelocity);
+                            ((WeaponSystemController)systemController).CmdSpawnWeapon(weapon, transform.position, transform.rotation, inheritVelocity * GetComponentInParent<Rigidbody>().velocity);
                         }
                     }
 

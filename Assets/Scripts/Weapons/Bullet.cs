@@ -31,8 +31,8 @@ public class Bullet : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (networkIdentity.hasAuthority)
-        {
+        //if (networkIdentity.hasAuthority)
+        //{
             transform.LookAt(myTarget.transform.position);
             lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
@@ -52,13 +52,13 @@ public class Bullet : NetworkBehaviour {
                     Destroy(gameObject);
                 }
             }
-        }
+        //}
 	}
 
     void FixedUpdate()
     {
-        if (networkIdentity.hasAuthority)
-        {
+        //if (networkIdentity.hasAuthority)
+        //{
             if (!dead)
             {
                 if ((transform.position - myTarget.transform.position).magnitude <= detonateRange)
@@ -71,7 +71,7 @@ public class Bullet : NetworkBehaviour {
             {
                 rigidbody.velocity = Vector3.zero;
             }
-        }
+        //}
     }
 
     [Command]

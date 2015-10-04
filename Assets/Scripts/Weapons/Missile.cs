@@ -56,8 +56,8 @@ public class Missile : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (networkIdentity.hasAuthority)
-        {
+        //if (networkIdentity.hasAuthority)
+        //{
             lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
             {
@@ -76,13 +76,13 @@ public class Missile : NetworkBehaviour
                     Destroy(gameObject);
                 }
             }
-        }
+        //}
     }
 
     void FixedUpdate()
     {
-        if (networkIdentity.hasAuthority)
-        {
+        //if (networkIdentity.hasAuthority)
+        //{
             if (!dead)
             {
                 home();
@@ -99,7 +99,7 @@ public class Missile : NetworkBehaviour
             {
                 rigidbody.velocity = Vector3.zero;
             }
-        }
+        //}
     }
 
     [Command]
