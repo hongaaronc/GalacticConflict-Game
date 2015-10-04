@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 public class WeaponSystem : GenericSystem {
     public GameObject[] myWeapons;
-    public GameObject[] myClientsideWeapons;
     public float inheritVelocity = 0f;
     public int[] fireTimes;
     public int coolDown;
@@ -28,12 +28,7 @@ public class WeaponSystem : GenericSystem {
                     if (time == timer)
                     {
                         foreach (GameObject weapon in myWeapons) {
-                            ((WeaponSystemController)systemController).CmdSpawnClientsideWeapons(myClientsideWeapons, gameObject, inheritVelocity);
-
-                            GameObject newWeapon = (GameObject)Instantiate(weapon, transform.position, transform.rotation);
-                            if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
-                                newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
-                            ((WeaponSystemController)systemController).CmdSpawnWeapon(newWeapon);
+                            ((WeaponSystemController)systemController).CmdSpawnWeapon(weapon, transform.position, transform.rotation, inheritVelocity);
                         }
                     }
 

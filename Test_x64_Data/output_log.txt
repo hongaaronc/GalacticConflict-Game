@@ -15,7 +15,31 @@ Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\Test_x64_Data\Managed\U
 Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\Test_x64_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\Test_x64_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\Test_x64_Data\Managed\System.Core.dll (this message is harmless)
-- Completed reload, in  0.078 seconds
+- Completed reload, in  0.087 seconds
 desktop: 2560x1080 60Hz; virtual: 4480x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\Test_x64_Data\Managed\System.dll (this message is harmless)
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 28dc -> priority: 1 
+  Thread -> id: fe0 -> priority: 1 
+Log: connection {1} has been disconnected by timeout; address {::ffff:127.0.0.1:7777}
+aissp: time {43510} lastRecTime {41129} DisTme {2000}, rtt {0} 
+ 
+(Filename:  Line: 1848)
+
+UNet Client Disconnect Error: Timeout
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.177506 ms
+Multiple NetworkManagers detected in the scene. Only one NetworkManager can exist at a time. The duplicate NetworkManager will not be used.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 4887.
+Total: 1.172559 ms (FindLiveObjects: 0.204432 ms CreateObjectMapping: 0.064241 ms MarkObjects: 0.866661 ms  DeleteObjects: 0.011407 ms)
+

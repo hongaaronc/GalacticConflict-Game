@@ -24,12 +24,9 @@ public class Bullet : NetworkBehaviour {
 
         rigidbody.AddRelativeForce(fireForce * Vector3.forward);
 
-        if (networkIdentity.hasAuthority)
-        {
-            myTarget = new GameObject("Target");
-            myTarget.transform.position = Camera.main.GetComponent<ControlsHandler>().mousePosition;
-            myTarget.transform.parent = Camera.main.GetComponent<ControlsHandler>().target;
-        }
+        myTarget = new GameObject("Target");
+        myTarget.transform.position = Camera.main.GetComponent<ControlsHandler>().mousePosition;
+        myTarget.transform.parent = Camera.main.GetComponent<ControlsHandler>().target;
 	}
 	
 	// Update is called once per frame

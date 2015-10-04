@@ -51,7 +51,7 @@ public class ParticleControllerSystem : GenericSystem
             timer = 0;
     }
 
-    [RPC]
+    //[RPC]
     private void playParticleSystems()
     {
         foreach (ParticleSystem particleSystem in myParticleSystems)
