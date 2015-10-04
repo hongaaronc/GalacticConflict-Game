@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class Missile : MonoBehaviour
+public class Missile : NetworkBehaviour
 {
     public float fireForce;
     public float fireRandomForce = 3.2f;
@@ -27,9 +28,8 @@ public class Missile : MonoBehaviour
 
     private GameObject myTarget;
 
-    private Rigidbody myRigidBody;
-    private NetworkView myNetworkView;
-    private NetworkManager myNetworkManager;
+    private Rigidbody rigidbody;
+    private NetworkIdentity networkIdentity;
 
     void OnValidate()
     {
@@ -39,42 +39,31 @@ public class Missile : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        myRigidBody = GetComponent<Rigidbody>();
-        myNetworkView = GetComponent<NetworkView>();
-        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
+        rigidbody = GetComponent<Rigidbody>();
+        networkIdentity = GetComponent<NetworkIdentity>();
 
-        myRigidBody.maxAngularVelocity = topAngularSpeed;
-        myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
-        myRigidBody.AddRelativeForce(Random.Range(-fireRandomForce, fireRandomForce) * Vector3.right);
-        myRigidBody.AddTorque(Random.Range(-fireRandomTorque, fireRandomTorque) * Vector3.up);
+        rigidbody.maxAngularVelocity = topAngularSpeed;
+        rigidbody.AddRelativeForce(fireForce * Vector3.forward);
+        rigidbody.AddRelativeForce(Random.Range(-fireRandomForce, fireRandomForce) * Vector3.right);
+        rigidbody.AddTorque(Random.Range(-fireRandomTorque, fireRandomTorque) * Vector3.up);
         transform.Rotate(Vector3.up, Random.Range(-fireRandomAngle, fireRandomAngle));
 
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
-        {
-            myTarget = new GameObject("Target");
-            myTarget.transform.position = Camera.main.GetComponent<ControlsHandler>().mousePosition;
-            myTarget.transform.parent = Camera.main.GetComponent<ControlsHandler>().target;
-        }
+        myTarget = new GameObject("Target");
+        myTarget.transform.position = Camera.main.GetComponent<ControlsHandler>().mousePosition;
+        myTarget.transform.parent = Camera.main.GetComponent<ControlsHandler>().target;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        if (networkIdentity.hasAuthority)
         {
             lifetime -= Time.deltaTime;
             if (lifetime <= 0f)
             {
                 if (!dead)
                 {
-                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
-                    {
-                        myNetworkView.RPC("die", RPCMode.All);
-                    }
-                    else if (!myNetworkManager.multiplayerEnabled)
-                    {
-                        die();
-                    }
+                    CmdDie();
                     dead = true;
                 }
             }
@@ -84,10 +73,7 @@ public class Missile : MonoBehaviour
                 if (deathTime <= 0f)
                 {
                     Destroy(myTarget);
-                    if (myNetworkManager.multiplayerEnabled)
-                        Network.Destroy(gameObject);
-                    else
-                        Destroy(gameObject);
+                    Destroy(gameObject);
                 }
             }
         }
@@ -95,60 +81,65 @@ public class Missile : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        if (networkIdentity.hasAuthority)
         {
             if (!dead)
             {
                 home();
-                myRigidBody.AddRelativeForce(thrust * Vector3.forward);
+                rigidbody.AddRelativeForce(thrust * Vector3.forward);
                 glide();
-                myRigidBody.velocity = Vector3.ClampMagnitude(myRigidBody.velocity, topSpeed);
+                rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, topSpeed);
                 if ((transform.position - myTarget.transform.position).magnitude <= detonateRange)
                 {
-                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
-                    {
-                        myNetworkView.RPC("detonate", RPCMode.All);
-                    }
-                    else if (!myNetworkManager.multiplayerEnabled)
-                    {
-                        detonate();
-                    }
+                    CmdDetonate();
                     dead = true;
                 }
             }
             else
             {
-                myRigidBody.velocity = Vector3.zero;
+                rigidbody.velocity = Vector3.zero;
             }
         }
     }
 
-    [RPC]
-    public void detonate()
+    [Command]
+    public void CmdDetonate()
+    {
+        RpcDetonate();
+    }
+
+    [ClientRpc]
+    public void RpcDetonate()
     {
         Instantiate(explosion, transform.position, Quaternion.identity);
         foreach (ParticleSystem ps in particleSystems)
         {
             ps.emissionRate = 0f;
         }
-        myRigidBody.velocity = Vector3.zero;
+        rigidbody.velocity = Vector3.zero;
     }
 
-    [RPC]
-    public void die()
+    [Command]
+    public void CmdDie()
+    {
+        RpcDie();
+    }
+
+    [ClientRpc]
+    public void RpcDie()
     {
         Instantiate(deathParticle, transform.position, Quaternion.identity);
         foreach (ParticleSystem ps in particleSystems)
         {
             ps.emissionRate = 0f;
         }
-        myRigidBody.velocity = Vector3.zero;
+        rigidbody.velocity = Vector3.zero;
     }
 
     private void glide()
     {
         //Add speeds due to handling
-        Vector3 newVelocity = myRigidBody.velocity;
+        Vector3 newVelocity = rigidbody.velocity;
         float handlingMagnitude = newVelocity.magnitude * handling;
         newVelocity.x += Mathf.Sin(Mathf.Deg2Rad * transform.rotation.eulerAngles.y) * Mathf.Cos(Mathf.Deg2Rad * transform.rotation.eulerAngles.x) * handlingMagnitude;
         newVelocity.y -= Mathf.Sin(Mathf.Deg2Rad * transform.rotation.eulerAngles.x) * handlingMagnitude;
@@ -161,7 +152,7 @@ public class Missile : MonoBehaviour
         }
 
         //sets rigidbody velocity to new velocity
-        myRigidBody.velocity = newVelocity;
+        rigidbody.velocity = newVelocity;
     }
 
     private void home()

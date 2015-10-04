@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : NetworkBehaviour {
     public float fireForce;
     public float detonateRange = 0.2f;
     public float lifetime = 1f;
@@ -14,18 +15,16 @@ public class Bullet : MonoBehaviour {
 
     private GameObject myTarget;
 
-    private Rigidbody myRigidBody;
-    private NetworkView myNetworkView;
-    private NetworkManager myNetworkManager;
+    private Rigidbody rigidbody;
+    private NetworkIdentity networkIdentity;
 	// Use this for initialization
 	void Start () {
-        myRigidBody = GetComponent<Rigidbody>();
-        myNetworkView = GetComponent<NetworkView>();
-        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
+        rigidbody = GetComponent<Rigidbody>();
+        networkIdentity = GetComponent<NetworkIdentity>();
 
-        myRigidBody.AddRelativeForce(fireForce * Vector3.forward);
+        rigidbody.AddRelativeForce(fireForce * Vector3.forward);
 
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        if (networkIdentity.hasAuthority)
         {
             myTarget = new GameObject("Target");
             myTarget.transform.position = Camera.main.GetComponent<ControlsHandler>().mousePosition;
@@ -35,7 +34,7 @@ public class Bullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        if (networkIdentity.hasAuthority)
         {
             transform.LookAt(myTarget.transform.position);
             lifetime -= Time.deltaTime;
@@ -43,14 +42,7 @@ public class Bullet : MonoBehaviour {
             {
                 if (!dead)
                 {
-                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
-                    {
-                        myNetworkView.RPC("die", RPCMode.All);
-                    }
-                    else if (!myNetworkManager.multiplayerEnabled)
-                    {
-                        die();
-                    }
+                    CmdDie();
                     dead = true;
                 }
             }
@@ -60,10 +52,7 @@ public class Bullet : MonoBehaviour {
                 if (deathTime <= 0f)
                 {
                     Destroy(myTarget);
-                    if (myNetworkManager.multiplayerEnabled)
-                        Network.Destroy(gameObject);
-                    else
-                        Destroy(gameObject);
+                    Destroy(gameObject);
                 }
             }
         }
@@ -71,49 +60,54 @@ public class Bullet : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        if (networkIdentity.hasAuthority)
         {
             if (!dead)
             {
                 if ((transform.position - myTarget.transform.position).magnitude <= detonateRange)
                 {
-                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
-                    {
-                        myNetworkView.RPC("detonate", RPCMode.All);
-                    }
-                    else if (!myNetworkManager.multiplayerEnabled)
-                    {
-                        detonate();
-                    }
+                    CmdDetonate();
                     dead = true;
                 }
             }
             else
             {
-                myRigidBody.velocity = Vector3.zero;
+                rigidbody.velocity = Vector3.zero;
             }
         }
     }
 
-    [RPC]
-    public void detonate()
+    [Command]
+    public void CmdDetonate()
+    {
+        RpcDetonate();
+    }
+
+    [ClientRpc]
+    public void RpcDetonate()
     {
         Instantiate(explosion, transform.position, Quaternion.identity);
         foreach (ParticleSystem ps in particleSystems)
         {
             ps.emissionRate = 0f;
         }
-        myRigidBody.velocity = Vector3.zero;
+        rigidbody.velocity = Vector3.zero;
     }
 
-    [RPC]
-    public void die()
+    [Command]
+    public void CmdDie()
+    {
+        RpcDie();
+    }
+
+    [ClientRpc]
+    public void RpcDie()
     {
         Instantiate(deathParticle, transform.position, Quaternion.identity);
         foreach (ParticleSystem ps in particleSystems)
         {
             ps.emissionRate = 0f;
         }
-        myRigidBody.velocity = Vector3.zero;
+        rigidbody.velocity = Vector3.zero;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 public class Turret : MonoBehaviour {
@@ -8,21 +9,17 @@ public class Turret : MonoBehaviour {
 
     private float parentedAngleOffset = 0f;
 
-	private NetworkView myNetworkView;
-    private NetworkManager myNetworkManager;
+    public NetworkIdentity networkIdentity;
 	// Use this for initialization
 	void Start () {
         targetVector = Camera.main.GetComponent<CameraFollow>().mousePosition;
 
         parentedAngleOffset = transform.eulerAngles.y - transform.localEulerAngles.y + 90f;
-
-        myNetworkView = GetComponent<NetworkView>();
-        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+        if (networkIdentity.hasAuthority)
         {
             targetVector = Camera.main.GetComponent<CameraFollow>().mousePosition;
             float targetAngle = Mathf.Atan2(transform.position.z - targetVector.z, targetVector.x - transform.position.x) * Mathf.Rad2Deg + parentedAngleOffset;
