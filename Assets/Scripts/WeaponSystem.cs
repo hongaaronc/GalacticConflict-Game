@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 using System.Collections;
 
 public class WeaponSystem : GenericSystem {
-    public GameObject[] myWeapons;
+    public string[] myWeapons;
     public float inheritVelocity = 0f;
     public int[] fireTimes;
     public int coolDown;
@@ -27,7 +27,7 @@ public class WeaponSystem : GenericSystem {
                 {
                     if (time == timer)
                     {
-                        foreach (GameObject weapon in myWeapons) {
+                        foreach (string weapon in myWeapons) {
                             ((WeaponSystemController)systemController).CmdSpawnWeapon(weapon, transform.position, transform.rotation, inheritVelocity);
                         }
                     }
