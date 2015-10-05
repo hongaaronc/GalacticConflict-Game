@@ -6,7 +6,6 @@ public class ControlsHandler : MonoBehaviour {
     public Transform GUIcursor;
     public MouseInput mouseInput;
     public Vector3 mousePosition;
-    [HideInInspector]
     public Transform target = null;
 
 	// Use this for initialization

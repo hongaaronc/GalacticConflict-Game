@@ -67,5 +67,6 @@ public class NetworkManager : MonoBehaviour {
 		else
             newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
 		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
+        newShip.layer = 8;
 	}
 }

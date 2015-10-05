@@ -1,31 +1,27 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 
-public class SystemController : NetworkBehaviour {
+public class SystemController : MonoBehaviour {
     public int abilityNum;
     public GenericSystem[] systems;
 
-    [HideInInspector]
-    public NetworkIdentity networkIdentity;
+    private NetworkView myNetworkView;
+    private NetworkManager myNetworkManager;
 
     void OnValidate()
     {
         abilityNum = Mathf.Clamp(abilityNum, 0, 4);
-        foreach (GenericSystem system in systems)
-        {
-            system.systemController = this;
-        }
     }
 	// Use this for initialization
 	void Start () {
-        networkIdentity = GetComponent<NetworkIdentity>();
+        myNetworkView = GetComponent<NetworkView>();
+        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
 
     // Update is called once per frame
     void Update()
     {
-        if (networkIdentity.hasAuthority)
+        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
             if (Input.GetAxisRaw("Ability"+abilityNum) == 1.0f)
             {
@@ -39,7 +35,7 @@ public class SystemController : NetworkBehaviour {
 
     void FixedUpdate()
     {
-        if (networkIdentity.hasAuthority)
+        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
         {
             if (Input.GetAxisRaw("Ability" + abilityNum) == 1.0f)
             {

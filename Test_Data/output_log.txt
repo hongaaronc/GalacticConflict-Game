@@ -1,0 +1,58 @@
+Initialize engine version: 5.2.0f3 (e7947df39b5c)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 780 (ID=0x1004)
+    Vendor:   NVIDIA
+    VRAM:     3013 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\System.Core.dll (this message is harmless)
+- Completed reload, in  0.133 seconds
+desktop: 2560x1080 60Hz; virtual: 4480x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: C:\Users\Aaron\Downloads\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\GalacticConflict-50e92453d8e9629b638f2505f6f73b7d3101267a\Test_Data\Managed\System.dll (this message is harmless)
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 23dc -> priority: 1 
+  Thread -> id: 26f8 -> priority: 1 
+Host list received
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Received pong from 192.168.1.181:25000
+ 
+(Filename:  Line: 852)
+
+Received pong from 169.254.80.80:25000
+ 
+(Filename:  Line: 852)
+
+View ID AllocatedID: 1 not found during lookup. Strange behaviour may occur
+ 
+(Filename:  Line: 1697)
+
+Couldn't perform remote Network.Destroy because the network view 'AllocatedID: 1' could not be located.
+ 
+(Filename:  Line: 2480)
+
+The server has disconnected from the client. Most likely the server has shut down.
+ 
+(Filename:  Line: 761)
+

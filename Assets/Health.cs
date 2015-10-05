@@ -15,6 +15,10 @@ public class Health : MonoBehaviour {
     public Object[] dyingSpawns;
     public Object[] deathSpawns;
 
+    [HideInInspector]
+    public NetworkView myNetworkView;
+    private NetworkManager myNetworkManager;
+
     void OnValidate()
     {
         foreach (Health childHealth in childHealths) {
@@ -25,6 +29,9 @@ public class Health : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        myNetworkView = GetComponent<NetworkView>();
+        myNetworkManager = Camera.main.GetComponent<NetworkManager>();
+
         myHealth = maxHealth;
         myLastHealth = myHealth;
 	}
@@ -46,7 +53,10 @@ public class Health : MonoBehaviour {
                     {
                         Instantiate(spawn, transform.position, Quaternion.identity);
                     }
-                    Destroy(gameObject);
+                    if (myNetworkManager.multiplayerEnabled)
+                        Network.Destroy(gameObject);
+                    else
+                        Destroy(gameObject);
                 }
                 alive = false;
             }
@@ -61,4 +71,10 @@ public class Health : MonoBehaviour {
             myLastHealth = myHealth;
         }
 	}
+
+    [RPC]
+    public void takeDamage(float damage)
+    {
+        myHealth -= damage;
+    }
 }
