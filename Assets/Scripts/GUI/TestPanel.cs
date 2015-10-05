@@ -120,4 +120,10 @@ public class TestPanel : MonoBehaviour {
         myChat.sendChatMessage("Player has joined the game");
         myNetworkManager.spawnShip();
     }
+
+    public void RespawnShip()
+    {
+        myChat.sendChatMessage("Player respawned");
+        myNetworkManager.spawnShip();
+    }
 }

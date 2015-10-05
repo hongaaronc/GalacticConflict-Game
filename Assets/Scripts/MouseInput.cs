@@ -36,20 +36,25 @@ public class MouseInput : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        myImage.sprite = cursorIdle;
-        if (!isLocked)
-            transform.position += sensitivity * new Vector3(Input.GetAxisRaw("CursorX"), Input.GetAxisRaw("CursorY"), 0f);
-        hoverHandler();
-        lockHandler();
-        constrain();
-        if (Input.GetMouseButtonDown(0) && lockMouse)
+        if (Camera.main.GetComponent<CameraFollow>().myTargets[0] != null)
         {
-            if (Cursor.lockState != CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
+            Vector3 forward = Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.forward;
+            transform.localPosition = 1000f * new Vector3(forward.x, forward.z, 0f);
         }
+        //myImage.sprite = cursorIdle;
+        //if (!isLocked)
+        //    transform.position += sensitivity * new Vector3(Input.GetAxisRaw("CursorX"), Input.GetAxisRaw("CursorY"), 0f);
+        //hoverHandler();
+        //lockHandler();
+        //constrain();
+        //if (Input.GetMouseButtonDown(0) && lockMouse)
+        //{
+        //    if (Cursor.lockState != CursorLockMode.Locked)
+        //    {
+        //        Cursor.lockState = CursorLockMode.Locked;
+        //        Cursor.visible = false;
+        //    }
+        //}
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;

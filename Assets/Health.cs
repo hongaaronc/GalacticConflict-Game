@@ -49,11 +49,15 @@ public class Health : MonoBehaviour {
                 if (necessaryToLive)
                 {
                     //Ship death
-                    foreach (Object spawn in deathSpawns)
-                    {
-                        Instantiate(spawn, transform.position, Quaternion.identity);
-                    }
                     if (myNetworkManager.multiplayerEnabled)
+                    {
+                        myNetworkView.RPC("explode", RPCMode.All);
+                    }
+                    else
+                    {
+                        explode();
+                    }
+                    if (myNetworkManager.multiplayerEnabled && myNetworkView.isMine)
                         Network.Destroy(gameObject);
                     else
                         Destroy(gameObject);
@@ -75,6 +79,16 @@ public class Health : MonoBehaviour {
     [RPC]
     public void takeDamage(float damage)
     {
-        myHealth -= damage;
+        if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
+            myHealth -= damage;
+    }
+
+    [RPC]
+    private void explode()
+    {
+        foreach (GameObject spawn in deathSpawns)
+        {
+            GameObject newWeapon = (GameObject)Instantiate(spawn, transform.position, transform.rotation);
+        }
     }
 }
