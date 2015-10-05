@@ -8,6 +8,7 @@ public class NetworkManager : MonoBehaviour {
 	public bool multiplayerEnabled = false;
     public float mySendRate = 1000f;
     public Object shipPrefab;
+    public Object enemyFighter;
 
 	void Start() {
 	}
@@ -16,6 +17,7 @@ public class NetworkManager : MonoBehaviour {
     {
         multiplayerEnabled = false;
         spawnShip();
+        spawnEnemyFighter();
     }
 
 	public void StartServer()
@@ -68,4 +70,9 @@ public class NetworkManager : MonoBehaviour {
             newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
 		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
 	}
+
+    public void spawnEnemyFighter() {
+        GameObject newEnemy;
+        newEnemy = (GameObject)Instantiate(enemyFighter, Vector3.zero, Quaternion.identity);
+    }
 }
