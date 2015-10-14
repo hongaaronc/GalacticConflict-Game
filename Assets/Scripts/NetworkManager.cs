@@ -8,12 +8,14 @@ public class NetworkManager : MonoBehaviour {
 	public bool multiplayerEnabled = false;
     public float mySendRate = 1000f;
     public Object shipPrefab;
+    public bool gameStarted = false;
 
 	void Start() {
 	}
 
     public void StartOffline()
     {
+        gameStarted = true;
         multiplayerEnabled = false;
         spawnShip();
     }
@@ -22,6 +24,7 @@ public class NetworkManager : MonoBehaviour {
 	{
 		Network.InitializeServer(4, 25000, !Network.HavePublicAddress());
 		MasterServer.RegisterHost (typeName, gameName);
+        gameStarted = true;
 	}
 
 	void OnServerInitialized()
@@ -57,6 +60,7 @@ public class NetworkManager : MonoBehaviour {
 
 	public void JoinServer(HostData hostData)
 	{
+        gameStarted = true;
 		Network.Connect(hostData);
 	}
 

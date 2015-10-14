@@ -1,0 +1,199 @@
+Initialize engine version: 5.2.0f3 (e7947df39b5c)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 780 (ID=0x1004)
+    Vendor:   NVIDIA
+    VRAM:     3013 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\System.Core.dll (this message is harmless)
+- Completed reload, in  0.128 seconds
+desktop: 2560x1080 60Hz; virtual: 4480x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: C:\Users\Aaron\Documents\GitHub\GalacticConflict\PC_Data\Managed\System.dll (this message is harmless)
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 213c -> priority: 1 
+  Thread -> id: 1e84 -> priority: 1 
+Host list received
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Failed Network.Instantiate because we are not connected.
+ 
+(Filename:  Line: 2480)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at NetworkManager.spawnShip () [0x00000] in <filename unknown>:0 
+  at CameraFollow.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Received pong from 192.168.1.181:25000
+ 
+(Filename:  Line: 852)
+
+Received pong from 169.254.80.80:25000
+ 
+(Filename:  Line: 852)
+
+Failed Network.Instantiate because we are not connected.
+ 
+(Filename:  Line: 2480)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at NetworkManager.spawnShip () [0x00000] in <filename unknown>:0 
+  at CameraFollow.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Failed Network.Instantiate because we are not connected.
+ 
+(Filename:  Line: 2480)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at NetworkManager.spawnShip () [0x00000] in <filename unknown>:0 
+  at CameraFollow.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Failed Network.Instantiate because we are not connected.
+ 
+(Filename:  Line: 2480)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at NetworkManager.spawnShip () [0x00000] in <filename unknown>:0 
+  at CameraFollow.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Failed Network.Instantiate because we are not connected.
+ 
+(Filename:  Line: 2480)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at NetworkManager.spawnShip () [0x00000] in <filename unknown>:0 
+  at CameraFollow.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Failed Network.Instantiate because we are not connected.
+ 
+(Filename:  Line: 2480)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at NetworkManager.spawnShip () [0x00000] in <filename unknown>:0 
+  at CameraFollow.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 64)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Missile.OnTriggerEnter (UnityEngine.Collider other) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+The server has disconnected from the client. Most likely the server has shut down.
+ 
+(Filename:  Line: 761)
+

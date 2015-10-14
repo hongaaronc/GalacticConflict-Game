@@ -24,6 +24,10 @@ public class CameraFollow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (myTargets[0] == null && Camera.main.GetComponent<NetworkManager>().gameStarted)
+        {
+            Camera.main.GetComponent<NetworkManager>().spawnShip();
+        }
         if (Input.GetMouseButton(1))
             freeCam = true;
         else

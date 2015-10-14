@@ -182,15 +182,24 @@ public class Missile : MonoBehaviour
                     if (myNetworkView.isMine)
                     {
                         other.GetComponent<Health>().myNetworkView.RPC("takeDamage", RPCMode.All, damage);
-                        myNetworkView.RPC("detonate", RPCMode.All);
                     }
                 }
                 else
                 {
                     other.GetComponent<Health>().takeDamage(damage);
-                    detonate();
                 }
             }
+        }
+        if (myNetworkManager.multiplayerEnabled)
+        {
+            if (myNetworkView.isMine)
+            {
+                myNetworkView.RPC("detonate", RPCMode.All);
+            }
+        }
+        else
+        {
+            detonate();
         }
     }
 }
