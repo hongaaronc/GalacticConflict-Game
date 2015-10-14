@@ -39,7 +39,16 @@ public class MovementSystem : GenericSystem
         if (moveTimer <= moveTime)
         {
             shipMovement.GetComponent<Rigidbody>().maxAngularVelocity = topAngularSpeed;
-            shipMovement.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(forceCurveX.Evaluate(moveTimer / moveTime), forceCurveY.Evaluate(moveTimer / moveTime), forceCurveZ.Evaluate(moveTimer / moveTime)));
+            GameObject shittyImplementationOfFiguringOutEulerAnglesToVectors = new GameObject();
+            shittyImplementationOfFiguringOutEulerAnglesToVectors.transform.eulerAngles = new Vector3(0f, shipMovement.transform.eulerAngles.y, 0f);
+
+            Vector3 forceToAdd = forceCurveX.Evaluate(moveTimer / moveTime) * shittyImplementationOfFiguringOutEulerAnglesToVectors.transform.right + forceCurveY.Evaluate(moveTimer / moveTime) * shittyImplementationOfFiguringOutEulerAnglesToVectors.transform.up + forceCurveZ.Evaluate(moveTimer / moveTime) * shittyImplementationOfFiguringOutEulerAnglesToVectors.transform.forward;
+
+            Destroy(shittyImplementationOfFiguringOutEulerAnglesToVectors);
+
+            shipMovement.GetComponent<Rigidbody>().AddForce(forceToAdd);
+
+
             shipMovement.GetComponent<Rigidbody>().AddRelativeTorque(new Vector3(rotationForceCurveX.Evaluate(moveTimer / moveTime), rotationForceCurveY.Evaluate(moveTimer / moveTime), rotationForceCurveZ.Evaluate(moveTimer / moveTime)));
             if (moveTimer == moveTime)
             {

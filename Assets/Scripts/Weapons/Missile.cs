@@ -133,6 +133,8 @@ public class Missile : MonoBehaviour
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     [RPC]
@@ -144,6 +146,8 @@ public class Missile : MonoBehaviour
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     private void glide()
@@ -172,6 +176,16 @@ public class Missile : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
+    {
+        handleHit(other);
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        handleHit(col.collider);
+    }
+
+    void handleHit(Collider other)
     {
         if (other.tag == "Ship")
         {

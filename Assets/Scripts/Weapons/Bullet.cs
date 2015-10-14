@@ -118,6 +118,8 @@ public class Bullet : MonoBehaviour {
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     [RPC]
@@ -129,6 +131,8 @@ public class Bullet : MonoBehaviour {
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     void handleHit(Collider other)
@@ -167,5 +171,10 @@ public class Bullet : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {
         handleHit(other);
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        handleHit(col.collider);
     }
 }
