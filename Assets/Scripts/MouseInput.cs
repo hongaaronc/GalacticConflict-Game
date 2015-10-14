@@ -39,7 +39,7 @@ public class MouseInput : MonoBehaviour {
         if (Camera.main.GetComponent<CameraFollow>().myTargets[0] != null)
         {
             Vector3 forward = Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.forward;
-            transform.localPosition = 1000f * new Vector3(forward.x, forward.z, 0f);
+            transform.localPosition = 1500f * new Vector3(forward.x, forward.z, 0f);
         }
         //myImage.sprite = cursorIdle;
         //if (!isLocked)
