@@ -13,6 +13,8 @@ public class Bullet : MonoBehaviour {
 
     private bool dead = false;
 
+    private Vector3 lastPosition;
+
     private GameObject myTarget;
 
     private Rigidbody myRigidBody;
@@ -20,6 +22,7 @@ public class Bullet : MonoBehaviour {
     private NetworkManager myNetworkManager;
 	// Use this for initialization
 	void Start () {
+        lastPosition = transform.position;
         myRigidBody = GetComponent<Rigidbody>();
         myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
@@ -94,6 +97,16 @@ public class Bullet : MonoBehaviour {
                 myRigidBody.velocity = Vector3.zero;
             }
         }
+        int layerMask = ~(1 << gameObject.layer);
+        RaycastHit hit;
+        if (Physics.SphereCast(lastPosition, 3f, transform.position - lastPosition, out hit, (transform.position - lastPosition).magnitude, layerMask))
+        {
+            handleHit(hit.collider);
+        }
+        else
+        {
+        }
+        lastPosition = transform.position;
     }
 
     [RPC]
@@ -118,7 +131,7 @@ public class Bullet : MonoBehaviour {
         myRigidBody.velocity = Vector3.zero;
     }
 
-    void OnTriggerEnter(Collider other)
+    void handleHit(Collider other)
     {
         if (other.tag == "Ship")
         {
@@ -129,16 +142,30 @@ public class Bullet : MonoBehaviour {
                     if (myNetworkView.isMine)
                     {
                         other.GetComponent<Health>().myNetworkView.RPC("takeDamage", RPCMode.All, damage);
-                        myNetworkView.RPC("detonate", RPCMode.All);
                     }
                 }
                 else
                 {
                     other.GetComponent<Health>().takeDamage(damage);
-                    detonate();
                 }
-                
+
             }
         }
+        if (myNetworkManager.multiplayerEnabled)
+        {
+            if (myNetworkView.isMine)
+            {
+                myNetworkView.RPC("detonate", RPCMode.All);
+            }
+        }
+        else
+        {
+            detonate();
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        handleHit(other);
     }
 }
