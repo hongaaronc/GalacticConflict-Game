@@ -47,7 +47,8 @@ public class MouseInput : MonoBehaviour {
                 Vector3 direction = ship.transform.position - Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.position;
                 if (Mathf.Abs(Vector3.Angle(direction, Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.forward)) <= 20.0f)
                 {
-                    transform.position = new Vector3(ship.transform.position.x, transform.position.y, ship.transform.position.z);
+                    Vector3 newPosition = (1000f * direction + new Vector3(Screen.width, 0f, Screen.height)/2f);
+                    transform.position = new Vector3(newPosition.x, newPosition.z, 0f);
                 }
             }
         }
