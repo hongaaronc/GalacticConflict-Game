@@ -3,7 +3,12 @@ using System.Collections;
 
 public class Health : MonoBehaviour {
     public float maxHealth = 100f;
-    public float myHealth;
+    [HideInInspector]public float myHealth;
+    public float maxShield = 100f;
+    [HideInInspector]public float myShield;
+    public float shieldRechargeDelay = 3f;
+    private float shieldRechargeTimer = 0f;
+    public float shieldRechargeRate = 50.0f;
     public float parentBaseDamage = 0f;
     public float parentMultDamage = 0f;
     public bool necessaryToLive = false;
@@ -11,6 +16,7 @@ public class Health : MonoBehaviour {
     public Health[] childHealths;
     private bool alive = true;
     private float myLastHealth = 100f;
+    private float myLastShield = 100f;
 
     public Object[] dyingSpawns;
     public Object[] deathSpawns;
@@ -24,7 +30,7 @@ public class Health : MonoBehaviour {
         foreach (Health childHealth in childHealths) {
             childHealth.parentHealth = this;
         }
-        myHealth = Mathf.Clamp(myHealth, 0f, maxHealth);
+        myShield = Mathf.Clamp(myShield, 0f, maxShield);
     }
 
 	// Use this for initialization
@@ -34,6 +40,8 @@ public class Health : MonoBehaviour {
 
         myHealth = maxHealth;
         myLastHealth = myHealth;
+        myShield = maxShield;
+        myLastShield = myShield;
 	}
 	
 	// Update is called once per frame
@@ -74,13 +82,30 @@ public class Health : MonoBehaviour {
             myHealth = Mathf.Clamp(myHealth, 0f, maxHealth);
             myLastHealth = myHealth;
         }
+
+        if (shieldRechargeTimer > 0)
+            shieldRechargeTimer -= Time.deltaTime;
+        else if (myShield < maxShield)
+        {
+            myShield = Mathf.Clamp(myShield + Time.deltaTime * shieldRechargeRate, 0f, maxShield);
+        }
 	}
 
     [RPC]
     public void takeDamage(float damage)
     {
         if (!myNetworkManager.multiplayerEnabled || myNetworkView.isMine)
-            myHealth -= damage;
+        {
+            if (myShield > 0)
+            {
+                myShield = Mathf.Clamp(myShield - damage, 0f, maxShield);
+            }
+            else
+            {
+                myHealth -= damage;
+            }
+            shieldRechargeTimer = shieldRechargeDelay;
+        }
     }
 
     [RPC]

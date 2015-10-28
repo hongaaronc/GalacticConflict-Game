@@ -40,6 +40,16 @@ public class MouseInput : MonoBehaviour {
         {
             Vector3 forward = Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.forward;
             transform.localPosition = 1500f * new Vector3(forward.x, forward.z, 0f);
+
+            GameObject[] ships = GameObject.FindGameObjectsWithTag("Ship");
+            foreach (GameObject ship in ships)
+            {
+                Vector3 direction = ship.transform.position - Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.position;
+                if (Mathf.Abs(Vector3.Angle(direction, Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.forward)) <= 20.0f)
+                {
+                    transform.position = new Vector3(ship.transform.position.x, transform.position.y, ship.transform.position.z);
+                }
+            }
         }
         //myImage.sprite = cursorIdle;
         //if (!isLocked)
