@@ -6,11 +6,14 @@ public class Bullet : MonoBehaviour {
     public float detonateRange = 0.2f;
     public float lifetime = 1f;
     public float deathTime = 1f;
+    public float damage;
     public GameObject explosion;
     public GameObject deathParticle;
     public ParticleSystem[] particleSystems;
 
     private bool dead = false;
+
+    private Vector3 lastPosition;
 
     private GameObject myTarget;
 
@@ -19,6 +22,7 @@ public class Bullet : MonoBehaviour {
     private NetworkManager myNetworkManager;
 	// Use this for initialization
 	void Start () {
+        lastPosition = transform.position;
         myRigidBody = GetComponent<Rigidbody>();
         myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
@@ -93,6 +97,16 @@ public class Bullet : MonoBehaviour {
                 myRigidBody.velocity = Vector3.zero;
             }
         }
+        int layerMask = ~(1 << gameObject.layer);
+        RaycastHit hit;
+        if (Physics.SphereCast(lastPosition, 3f, transform.position - lastPosition, out hit, (transform.position - lastPosition).magnitude, layerMask))
+        {
+            handleHit(hit.collider);
+        }
+        else
+        {
+        }
+        lastPosition = transform.position;
     }
 
     [RPC]
@@ -104,6 +118,8 @@ public class Bullet : MonoBehaviour {
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     [RPC]
@@ -115,5 +131,50 @@ public class Bullet : MonoBehaviour {
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
+    }
+
+    void handleHit(Collider other)
+    {
+        if (other.tag == "Ship")
+        {
+            if (other.GetComponent<Health>() != null)
+            {
+                if (myNetworkManager.multiplayerEnabled)
+                {
+                    if (myNetworkView.isMine)
+                    {
+                        other.GetComponent<Health>().myNetworkView.RPC("takeDamage", RPCMode.All, damage);
+                    }
+                }
+                else
+                {
+                    other.GetComponent<Health>().takeDamage(damage);
+                }
+
+            }
+        }
+        if (myNetworkManager.multiplayerEnabled)
+        {
+            if (myNetworkView.isMine)
+            {
+                myNetworkView.RPC("detonate", RPCMode.All);
+            }
+        }
+        else
+        {
+            detonate();
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        handleHit(other);
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        handleHit(col.collider);
     }
 }

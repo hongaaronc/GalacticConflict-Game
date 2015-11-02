@@ -8,22 +8,23 @@ public class NetworkManager : MonoBehaviour {
 	public bool multiplayerEnabled = false;
     public float mySendRate = 1000f;
     public Object shipPrefab;
-    public Object enemyFighter;
+    public bool gameStarted = false;
 
 	void Start() {
 	}
 
     public void StartOffline()
     {
+        gameStarted = true;
         multiplayerEnabled = false;
         spawnShip();
-        spawnEnemyFighter();
     }
 
 	public void StartServer()
 	{
 		Network.InitializeServer(4, 25000, !Network.HavePublicAddress());
 		MasterServer.RegisterHost (typeName, gameName);
+        gameStarted = true;
 	}
 
 	void OnServerInitialized()
@@ -59,6 +60,7 @@ public class NetworkManager : MonoBehaviour {
 
 	public void JoinServer(HostData hostData)
 	{
+        gameStarted = true;
 		Network.Connect(hostData);
 	}
 
@@ -69,10 +71,6 @@ public class NetworkManager : MonoBehaviour {
 		else
             newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
 		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
+        newShip.layer = 8;
 	}
-
-    public void spawnEnemyFighter() {
-        GameObject newEnemy;
-        newEnemy = (GameObject)Instantiate(enemyFighter, Vector3.zero, Quaternion.identity);
-    }
 }

@@ -113,11 +113,19 @@ public class TestPanel : MonoBehaviour {
     {
         myChat.sendChatMessage("Server started");
         myNetworkManager.spawnShip();
+        gameObject.SetActive(false);
     }
 
     void OnConnectedToServer()
     {
         myChat.sendChatMessage("Player has joined the game");
+        myNetworkManager.spawnShip();
+        gameObject.SetActive(false);
+    }
+
+    public void RespawnShip()
+    {
+        myChat.sendChatMessage("Player respawned");
         myNetworkManager.spawnShip();
     }
 }

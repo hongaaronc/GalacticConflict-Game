@@ -14,6 +14,7 @@ public class Missile : MonoBehaviour
     public float detonateRange = 0.2f;
     public float lifetime = 1f;
     public float deathTime = 1f;
+    public float damage;
     public GameObject explosion;
     public GameObject deathParticle;
     public ParticleSystem[] particleSystems;
@@ -132,6 +133,8 @@ public class Missile : MonoBehaviour
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     [RPC]
@@ -143,6 +146,8 @@ public class Missile : MonoBehaviour
             ps.emissionRate = 0f;
         }
         myRigidBody.velocity = Vector3.zero;
+
+        dead = true;
     }
 
     private void glide()
@@ -168,5 +173,47 @@ public class Missile : MonoBehaviour
     {
         float targetAngle = Mathf.Atan2(transform.position.z - myTarget.transform.position.z, myTarget.transform.position.x - transform.position.x) * Mathf.Rad2Deg + 90f;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnRate), transform.eulerAngles.z);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        handleHit(other);
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        handleHit(col.collider);
+    }
+
+    void handleHit(Collider other)
+    {
+        if (other.tag == "Ship")
+        {
+            if (other.GetComponent<Health>() != null)
+            {
+                if (myNetworkManager.multiplayerEnabled)
+                {
+                    if (myNetworkView.isMine)
+                    {
+                        other.GetComponent<Health>().myNetworkView.RPC("takeDamage", RPCMode.All, damage);
+                    }
+                }
+                else
+                {
+                    other.GetComponent<Health>().takeDamage(damage);
+                }
+            }
+        }
+        if (myNetworkManager.multiplayerEnabled)
+        {
+            if (myNetworkView.isMine)
+            {
+                myNetworkView.RPC("detonate", RPCMode.All);
+            }
+        }
+        else
+        {
+            detonate();
+        }
     }
 }
