@@ -1,5 +1,7 @@
 ﻿ using UnityEngine;
+using UnityEngine.Analytics;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MouseInput : MonoBehaviour {
 
@@ -26,6 +28,8 @@ public class MouseInput : MonoBehaviour {
     private UnityEngine.UI.Image myImage;
 
     public Transform lockedTarget = null;
+
+    public float lastLockTime = 0f;
 
 	// Use this for initialization
 	void Start () {
@@ -56,7 +60,16 @@ public class MouseInput : MonoBehaviour {
             }
             if (!targetFound)
             {
+                Analytics.CustomEvent("lockOn", new Dictionary<string, object>
+                  {
+                    { "timeOfLock", lastLockTime }
+                  });
+                lastLockTime = 0f;
                 lockedTarget = null;
+            }
+            else
+            {
+                lastLockTime += Time.deltaTime;
             }
         }
         if (Input.GetKeyDown(KeyCode.Escape))

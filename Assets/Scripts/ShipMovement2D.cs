@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.Analytics;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ShipMovement2D : MonoBehaviour {
     
@@ -35,6 +37,8 @@ public class ShipMovement2D : MonoBehaviour {
 	private Rigidbody myRigidBody;
 	private NetworkView myNetworkView;
 	private NetworkManager myNetworkManager;
+
+    private float timeOfLastWarp = 0f;
 
     void OnValidate()
     {
@@ -121,10 +125,15 @@ public class ShipMovement2D : MonoBehaviour {
                 myNetworkView.RPC("onWarpEnter", RPCMode.All);
             else
                 onWarpEnter();
+            timeOfLastWarp = 0f;
             warping = true;
         }
         if (Input.GetAxisRaw("Warp") != 1.0f && warping/* && myRigidBody.velocity.magnitude >= warpTopSpeed*/)
         {
+            Analytics.CustomEvent("warp", new Dictionary<string, object>
+                  {
+                    { "timeOfWarp", timeOfLastWarp }
+                  });
             if (myNetworkManager.multiplayerEnabled)
                 myNetworkView.RPC("onWarpExit", RPCMode.All);
             else
@@ -134,6 +143,7 @@ public class ShipMovement2D : MonoBehaviour {
         if (warping)
         {
             myRigidBody.AddRelativeForce(warpThrust * Mathf.Pow(warpTime, warpPower-1f) * Vector3.forward);
+            timeOfLastWarp += Time.fixedDeltaTime;
             warpTime++;
             if (warpTopSpeed > 0f)
                 topSpeed = warpTopSpeed;
