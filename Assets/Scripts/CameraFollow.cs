@@ -26,6 +26,8 @@ public class CameraFollow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetKeyDown(KeyCode.F2))
+            lives++;
         if (myTargets[0] == null && Camera.main.GetComponent<NetworkManager>().gameStarted)
         {
             if (lives > 0)
