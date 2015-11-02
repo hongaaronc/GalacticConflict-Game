@@ -42,7 +42,7 @@ public class HUDArrows3D : MonoBehaviour
                 {
                     if (ship.transform == cursor.lockedTarget)
                     {
-                        arrow.transform.position = ship.transform.position;
+                        arrow.transform.position = playerShip.transform.position + 1.25f * arrowRadius * (ship.transform.position - playerShip.transform.position).normalized;
                         arrow.transform.localPosition = new Vector3(arrow.transform.localPosition.x, arrow.transform.localPosition.y, 0f);
                     }
                     else
@@ -62,7 +62,7 @@ public class HUDArrows3D : MonoBehaviour
                 newArrow.GetComponent<GUIHudArrow>().targetShip = ship;
                 if (ship.transform == cursor.lockedTarget)
                 {
-                    newArrow.transform.position = ship.transform.position;
+                    newArrow.transform.position = playerShip.transform.position + 1.25f * arrowRadius * (ship.transform.position - playerShip.transform.position).normalized;
                     newArrow.transform.localPosition = new Vector3(newArrow.transform.localPosition.x, newArrow.transform.localPosition.y, 0f);
                 }
                 else

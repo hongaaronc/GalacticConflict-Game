@@ -123,7 +123,7 @@ public class ShipMovement2D : MonoBehaviour {
                 onWarpEnter();
             warping = true;
         }
-        if (Input.GetAxisRaw("Warp") != 1.0f && warping && myRigidBody.velocity.magnitude >= warpTopSpeed)
+        if (Input.GetAxisRaw("Warp") != 1.0f && warping/* && myRigidBody.velocity.magnitude >= warpTopSpeed*/)
         {
             if (myNetworkManager.multiplayerEnabled)
                 myNetworkView.RPC("onWarpExit", RPCMode.All);
