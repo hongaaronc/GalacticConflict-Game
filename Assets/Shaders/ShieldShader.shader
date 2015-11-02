@@ -22,7 +22,6 @@ SubShader
         "RenderType"="Transparent"
 
     }
-
        
 Cull Back
 ZWrite On

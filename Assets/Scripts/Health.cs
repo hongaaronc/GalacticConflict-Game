@@ -143,6 +143,7 @@ public class Health : MonoBehaviour {
             {
                 myHealth -= damage;
             }
+            FindObjectOfType<HUDChromaticAbberation>().distort(0.5f * damage);
             shieldRechargeTimer = shieldRechargeDelay;
         }
     }

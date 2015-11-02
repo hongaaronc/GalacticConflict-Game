@@ -1,5 +1,7 @@
 ﻿ using UnityEngine;
+using UnityEngine.Analytics;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MouseInput : MonoBehaviour {
 
@@ -27,6 +29,8 @@ public class MouseInput : MonoBehaviour {
 
     public Transform lockedTarget = null;
 
+    public float lastLockTime = 0f;
+
 	// Use this for initialization
 	void Start () {
         myImage = GetComponent<UnityEngine.UI.Image>();
@@ -42,6 +46,7 @@ public class MouseInput : MonoBehaviour {
             transform.localPosition = 1500f * new Vector3(forward.x, forward.z, 0f);
 
             GameObject[] ships = GameObject.FindGameObjectsWithTag("Ship");
+            bool targetFound = false;
             foreach (GameObject ship in ships)
             {
                 Vector3 direction = ship.transform.position - Camera.main.GetComponent<CameraFollow>().myTargets[0].transform.position;
@@ -49,23 +54,24 @@ public class MouseInput : MonoBehaviour {
                 {
                     Vector3 newPosition = (1000f * direction + new Vector3(Screen.width, 0f, Screen.height)/2f);
                     transform.position = new Vector3(newPosition.x, newPosition.z, 0f);
+                    lockedTarget = ship.transform;
+                    targetFound = true;
                 }
             }
+            if (!targetFound)
+            {
+                Analytics.CustomEvent("lockOn", new Dictionary<string, object>
+                  {
+                    { "timeOfLock", lastLockTime }
+                  });
+                lastLockTime = 0f;
+                lockedTarget = null;
+            }
+            else
+            {
+                lastLockTime += Time.deltaTime;
+            }
         }
-        //myImage.sprite = cursorIdle;
-        //if (!isLocked)
-        //    transform.position += sensitivity * new Vector3(Input.GetAxisRaw("CursorX"), Input.GetAxisRaw("CursorY"), 0f);
-        //hoverHandler();
-        //lockHandler();
-        //constrain();
-        //if (Input.GetMouseButtonDown(0) && lockMouse)
-        //{
-        //    if (Cursor.lockState != CursorLockMode.Locked)
-        //    {
-        //        Cursor.lockState = CursorLockMode.Locked;
-        //        Cursor.visible = false;
-        //    }
-        //}
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
