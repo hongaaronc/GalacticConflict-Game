@@ -2,6 +2,12 @@
 using System.Collections;
 
 public class WeaponSystem : GenericSystem {
+    struct overheatManager{
+        public float minValue;
+        public float maxValue;
+        public float value;
+    }
+
     public GameObject[] myWeapons;
     public GameObject[] myClientsideWeapons;
     public float inheritVelocity = 0f;
@@ -11,19 +17,28 @@ public class WeaponSystem : GenericSystem {
 
     private bool myKeyDown = false;
     private int timer = 0;
+    private overheatManager overheat;
 
     private NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
 	// Use this for initialization
 	void Start () {
+        overheat.value = 0;
+        overheat.minValue = 0;
+        overheat.maxValue = 100;
         timer = coolDown + 1;
         myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
+
+    void Update ()
+    {
+        overheat.value -= 10f / 60f;
+    }
 	
 	
 	void FixedUpdate () {
-        if (timer <= coolDown)
+        if (timer <= coolDown && overheat.value < 100f)
         {
             if (triggerOnce || myKeyDown)
             {
@@ -32,6 +47,7 @@ public class WeaponSystem : GenericSystem {
                     if (time == timer)
                     {
                         GameObject newWeapon;
+                        overheat.value += 6f;
                         foreach (GameObject weapon in myWeapons) {
                             if (myNetworkManager.multiplayerEnabled)
                             {
