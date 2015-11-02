@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 1bb1bc6b1e87ccc4285416db62fc4f6e
+timeCreated: 1446463912
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - vignetteShader: {fileID: 4800000, guid: 627943dc7a9a74286b70a4f694a0acd5, type: 3}
+  - separableBlurShader: {fileID: 4800000, guid: e97c14fbb5ea04c3a902cc533d7fc5d1,
+      type: 3}
+  - chromAberrationShader: {fileID: 4800000, guid: 2b4f29398d9484ccfa9fd220449f5eee,
+      type: 3}
+  - m_VignetteMaterial: {fileID: 2100000, guid: ce6b3cbd4600b184b92e45364a963779,
+      type: 2}
+  - m_SeparableBlurMaterial: {fileID: 2100000, guid: df96a83940b75b946b665426efe1ee71,
+      type: 2}
+  - m_ChromAberrationMaterial: {fileID: 2100000, guid: a3e1b608242c2334da3380d96757236c,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

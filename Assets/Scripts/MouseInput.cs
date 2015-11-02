@@ -49,6 +49,7 @@ public class MouseInput : MonoBehaviour {
                 {
                     Vector3 newPosition = (1000f * direction + new Vector3(Screen.width, 0f, Screen.height)/2f);
                     transform.position = new Vector3(newPosition.x, newPosition.z, 0f);
+                    lockedTarget = ship.transform;
                 }
             }
         }

@@ -32,19 +32,29 @@ public class WeaponSystem : GenericSystem {
                     if (time == timer)
                     {
                         GameObject newWeapon;
-                        foreach (GameObject weapon in myWeapons) {
-                            if (myNetworkManager.multiplayerEnabled)
+                        if (myNetworkManager.multiplayerEnabled)
+                        {
+                            foreach (GameObject weapon in myWeapons)
                             {
                                 newWeapon = (GameObject)Network.Instantiate(weapon, transform.position, transform.rotation, 0);
-                                myNetworkView.RPC("spawnClientsideWeapons", RPCMode.All);
+                                if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
+                                {
+                                    newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
+                                }
                             }
-                            else
+                            myNetworkView.RPC("spawnClientsideWeapons", RPCMode.All);
+                        }
+                        else
+                        {
+                            foreach (GameObject weapon in myWeapons)
                             {
                                 newWeapon = (GameObject)Instantiate(weapon, transform.position, transform.rotation);
-                                spawnClientsideWeapons();
+                                if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
+                                {
+                                    newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
+                                }
                             }
-                            if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
-                                newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
+                            spawnClientsideWeapons();
                         }
                     }
 
@@ -69,7 +79,9 @@ public class WeaponSystem : GenericSystem {
         {
             GameObject newWeapon = (GameObject)Instantiate(weapon, transform.position, transform.rotation);
             if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
+            {
                 newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
+            }
         }
     }
 }

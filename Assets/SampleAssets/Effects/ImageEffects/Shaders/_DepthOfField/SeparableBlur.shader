@@ -1,4 +1,4 @@
-Shader "Hidden/SeparableBlur" {
+Shader "Revealed/SeparableBlur" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "" {}
 	}

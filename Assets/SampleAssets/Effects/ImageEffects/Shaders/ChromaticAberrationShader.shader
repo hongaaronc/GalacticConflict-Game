@@ -1,4 +1,4 @@
-Shader "Hidden/ChromaticAberration" {
+Shader "Revealed/ChromaticAberration" {
 	Properties {
 		_MainTex ("Base", 2D) = "" {}
 	}

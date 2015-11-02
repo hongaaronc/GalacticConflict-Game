@@ -1,4 +1,4 @@
-Shader "Hidden/Vignetting" {
+Shader "Revealed/Vignetting" {
 	Properties {
 		_MainTex ("Base", 2D) = "white" {}
 		_VignetteTex ("Vignette", 2D) = "white" {}
