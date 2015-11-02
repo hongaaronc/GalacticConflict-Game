@@ -11,6 +11,7 @@ public class CameraFollow : MonoBehaviour {
     public float maxLead = 30f;
     Vector3 velocity;
     public float dampTime = 1.0f;
+    public int lives = 3;
 
     // Use this for initialization
 	void Start () {
@@ -27,7 +28,16 @@ public class CameraFollow : MonoBehaviour {
 	void Update () {
         if (myTargets[0] == null && Camera.main.GetComponent<NetworkManager>().gameStarted)
         {
-            Camera.main.GetComponent<NetworkManager>().spawnShip();
+            if (lives > 0)
+            {
+                Camera.main.GetComponent<NetworkManager>().spawnShip();
+                FindObjectOfType<Chat>().sendMessageToSelf(lives + " lives remaining.");
+                lives--;
+            }
+            else
+            {
+                FindObjectOfType<Chat>().sendMessageToSelf("Out of lifes. Game over.");
+            }
         }
         try
         {

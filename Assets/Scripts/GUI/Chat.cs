@@ -53,6 +53,11 @@ public class Chat : MonoBehaviour
         }
     }
 
+    public void sendMessageToSelf(string message)
+    {
+        receiveChatMessage(message);
+    }
+
     [RPC]
     public void checkHostCommands()
     {
