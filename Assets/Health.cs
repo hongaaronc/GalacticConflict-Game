@@ -18,12 +18,16 @@ public class Health : MonoBehaviour {
     private float myLastHealth = 100f;
     private float myLastShield = 100f;
 
-    public Object[] dyingSpawns;
-    public Object[] deathSpawns;
+    public GameObject[] dyingSpawns;
+    public GameObject[] deathSpawns;
 
     [HideInInspector]
     public NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
+
+    public MeshRenderer[] shieldMeshRenderers;
+    public float shieldFadeRate;
+    public float shieldHitAlphaIncrease;
 
     void OnValidate()
     {
@@ -42,6 +46,21 @@ public class Health : MonoBehaviour {
         myLastHealth = myHealth;
         myShield = maxShield;
         myLastShield = myShield;
+
+        //foreach (MeshRenderer shield in shieldMeshRenderers)
+        //{
+        //    if (shield.additionalVertexStreams == null)
+        //        continue;
+        //    Vector3[] originalVertices = shield.additionalVertexStreams.vertices;
+        //    Vector3[] newVertices = new Vector3[originalVertices.Length];
+        //    for (int i = 0; i < originalVertices.Length; i++)
+        //    {
+        //        newVertices[i] = originalVertices[i];
+        //        newVertices[i].x += 2f;
+        //        print("test");
+        //    }
+        //    shield.additionalVertexStreams.vertices = newVertices;
+        //}
 	}
 	
 	// Update is called once per frame
@@ -83,6 +102,13 @@ public class Health : MonoBehaviour {
             myLastHealth = myHealth;
         }
 
+        foreach (MeshRenderer shield in shieldMeshRenderers)
+        {
+            Color newColor = shield.material.color;
+            newColor = new Color(newColor.r, newColor.g, newColor.b, Mathf.Clamp01(newColor.a - shieldFadeRate * Time.deltaTime));
+            shield.material.color = newColor;
+        }
+
         if (shieldRechargeTimer > 0)
             shieldRechargeTimer -= Time.deltaTime;
         else if (myShield < maxShield)
@@ -99,6 +125,13 @@ public class Health : MonoBehaviour {
             if (myShield > 0)
             {
                 myShield = Mathf.Clamp(myShield - damage, 0f, maxShield);
+
+                foreach (MeshRenderer shield in shieldMeshRenderers)
+                {
+                    Color newColor = shield.material.color;
+                    newColor = new Color(newColor.r, newColor.g, newColor.b, Mathf.Clamp01(newColor.a - shieldHitAlphaIncrease));
+                    shield.material.color = newColor;
+                }
             }
             else
             {
