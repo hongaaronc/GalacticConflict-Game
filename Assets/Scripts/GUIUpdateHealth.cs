@@ -5,10 +5,10 @@ using System.Collections;
 public class GUIUpdateHealth : MonoBehaviour
 {
     public Text text;
-    public bool updating = true;
-    public float refreshRate = 0.1f;
     public Slider hullSlider;
     public Slider shieldSlider;
+    public bool updating = true;
+    public float refreshRate = 0.1f;
 
     // Use this for initialization
     void Start()
