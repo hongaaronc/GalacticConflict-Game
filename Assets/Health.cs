@@ -26,8 +26,10 @@ public class Health : MonoBehaviour {
     private NetworkManager myNetworkManager;
 
     public MeshRenderer[] shieldMeshRenderers;
+    public ParticleSystem[] shieldParticleSystems;
     public float shieldFadeRate;
     public float shieldHitAlphaIncrease;
+    public int hitParticles = 100;
 
     void OnValidate()
     {
@@ -131,6 +133,10 @@ public class Health : MonoBehaviour {
                     Color newColor = shield.material.color;
                     newColor = new Color(newColor.r, newColor.g, newColor.b, Mathf.Clamp01(newColor.a - shieldHitAlphaIncrease));
                     shield.material.color = newColor;
+                }
+                foreach (ParticleSystem ps in shieldParticleSystems)
+                {
+                    ps.Emit(hitParticles);
                 }
             }
             else
