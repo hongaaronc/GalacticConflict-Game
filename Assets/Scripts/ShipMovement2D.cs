@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ShipMovement2D : MonoBehaviour {
-    
+
 	public float forwardThrust = 10f;
 	public float reverseThrust = 0f;
     private float baseDrag;

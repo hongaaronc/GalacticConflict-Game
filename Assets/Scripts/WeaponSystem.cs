@@ -2,6 +2,12 @@
 using System.Collections;
 
 public class WeaponSystem : GenericSystem {
+    struct overheatManager{
+        public float minValue;
+        public float maxValue;
+        public float value;
+    }
+
     public GameObject[] myWeapons;
     public GameObject[] myClientsideWeapons;
     public float inheritVelocity = 0f;
@@ -11,19 +17,28 @@ public class WeaponSystem : GenericSystem {
 
     private bool myKeyDown = false;
     private int timer = 0;
+    private overheatManager overheat;
 
     private NetworkView myNetworkView;
     private NetworkManager myNetworkManager;
 	// Use this for initialization
 	void Start () {
+        overheat.value = 0;
+        overheat.minValue = 0;
+        overheat.maxValue = 100;
         timer = coolDown + 1;
         myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
 	}
+
+    void Update ()
+    {
+        overheat.value -= 15f / 60f;
+    }
 	
 	
 	void FixedUpdate () {
-        if (timer <= coolDown)
+        if (timer <= coolDown && overheat.value < 100f)
         {
             if (triggerOnce || myKeyDown)
             {
@@ -32,29 +47,20 @@ public class WeaponSystem : GenericSystem {
                     if (time == timer)
                     {
                         GameObject newWeapon;
-                        if (myNetworkManager.multiplayerEnabled)
-                        {
-                            foreach (GameObject weapon in myWeapons)
+                        overheat.value += 6f;
+                        foreach (GameObject weapon in myWeapons) {
+                            if (myNetworkManager.multiplayerEnabled)
                             {
                                 newWeapon = (GameObject)Network.Instantiate(weapon, transform.position, transform.rotation, 0);
-                                if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
-                                {
-                                    newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
-                                }
+                                myNetworkView.RPC("spawnClientsideWeapons", RPCMode.All);
                             }
-                            myNetworkView.RPC("spawnClientsideWeapons", RPCMode.All);
-                        }
-                        else
-                        {
-                            foreach (GameObject weapon in myWeapons)
+                            else
                             {
                                 newWeapon = (GameObject)Instantiate(weapon, transform.position, transform.rotation);
-                                if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
-                                {
-                                    newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
-                                }
+                                spawnClientsideWeapons();
                             }
-                            spawnClientsideWeapons();
+                            if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
+                                newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
                         }
                     }
 
@@ -79,9 +85,7 @@ public class WeaponSystem : GenericSystem {
         {
             GameObject newWeapon = (GameObject)Instantiate(weapon, transform.position, transform.rotation);
             if (newWeapon.GetComponent<Rigidbody>() != null && GetComponentInParent<Rigidbody>() != null)
-            {
                 newWeapon.GetComponent<Rigidbody>().velocity = inheritVelocity * GetComponentInParent<Rigidbody>().velocity;
-            }
         }
     }
 }
