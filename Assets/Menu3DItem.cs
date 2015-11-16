@@ -80,6 +80,10 @@ public class Menu3DItem : MonoBehaviour {
                     ready = false;
                     navSelect.selected = true;
                 }
+                if (newScene == "Quit")
+                    Application.Quit();
+                else if (newScene != "")
+                    StartCoroutine(LoadLevel(newScene));
             }
         }
         else
@@ -87,4 +91,10 @@ public class Menu3DItem : MonoBehaviour {
             renderer.material.color = originalColor;
         }
 	}
+
+    IEnumerator LoadLevel(string level)
+    {
+        yield return new WaitForSeconds(2f);
+        Application.LoadLevel(level);
+    }
 }

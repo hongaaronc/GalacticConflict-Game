@@ -28,19 +28,19 @@ public class CameraFollow : MonoBehaviour {
 	void Update () {
         if (Input.GetKeyDown(KeyCode.F2))
             lives++;
-        if (myTargets[0] == null && Camera.main.GetComponent<NetworkManager>().gameStarted)
-        {
-            if (lives > 0)
-            {
-                //Camera.main.GetComponent<NetworkManager>().spawnShip();
-                FindObjectOfType<Chat>().sendMessageToSelf(lives + " lives remaining.");
-                lives--;
-            }
-            else
-            {
-                FindObjectOfType<Chat>().sendMessageToSelf("Out of lifes. Game over.");
-            }
-        }
+        //if (myTargets[0] == null && Camera.main.GetComponent<NetworkManager>().gameStarted)
+        //{
+        //    if (lives > 0)
+        //    {
+        //        //Camera.main.GetComponent<NetworkManager>().spawnShip();
+        //        FindObjectOfType<Chat>().sendMessageToSelf(lives + " lives remaining.");
+        //        lives--;
+        //    }
+        //    else
+        //    {
+        //        FindObjectOfType<Chat>().sendMessageToSelf("Out of lifes. Game over.");
+        //    }
+        //}
         try
         {
             Vector3 leadValue = Vector3.ClampMagnitude(leadMultiplier * myTargets[0].velocity, maxLead);

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MovementSystem : GenericSystem
 {
+    public AudioSource rollSound;
     public ShipMovement2D shipMovement;
     public int coolDown;
     public AnimationCurve forceCurveX;
@@ -74,6 +75,7 @@ public class MovementSystem : GenericSystem
     public override void Activate()
     {
         myKeyDown = true;
+        rollSound.Play();
         if (timer > coolDown)
             timer = 0;
     }

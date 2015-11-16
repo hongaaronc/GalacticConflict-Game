@@ -11,6 +11,8 @@ public class Health : MonoBehaviour {
     public float shieldRechargeRate = 50.0f;
     public float parentBaseDamage = 0f;
     public float parentMultDamage = 0f;
+    public AudioSource shieldRechargeSound;
+    public AudioSource shieldBreakSound;
     public bool necessaryToLive = false;
     [HideInInspector] public Health parentHealth;
     public Health[] childHealths;
@@ -113,7 +115,13 @@ public class Health : MonoBehaviour {
         }
 
         if (shieldRechargeTimer > 0)
+        {
             shieldRechargeTimer -= Time.deltaTime;
+            if (shieldRechargeTimer < 0.05)
+            {
+                shieldRechargeSound.Play();
+            }
+        }
         else if (myShield < maxShield)
         {
             myShield = Mathf.Clamp(myShield + Time.deltaTime * shieldRechargeRate, 0f, maxShield);
@@ -142,6 +150,7 @@ public class Health : MonoBehaviour {
             }
             else
             {
+                shieldBreakSound.Play();
                 myHealth -= damage;
             }
             FindObjectOfType<HUDChromaticAbberation>().distort(0.5f * damage);

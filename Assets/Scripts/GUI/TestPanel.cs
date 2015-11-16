@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 
 public class TestPanel : MonoBehaviour {
+    public bool autoConnect = true;
     public GameObject defaultSelected;
     public UnityEngine.UI.Text connectionText;
 
@@ -14,6 +15,10 @@ public class TestPanel : MonoBehaviour {
 	void Start () {
         myNetworkView = GetComponent<NetworkView>();
         myNetworkManager = Camera.main.GetComponent<NetworkManager>();
+        if (autoConnect)
+        {
+            StartCoroutine(startAutoConnect());
+        }
 	}
 	
 	// Update is called once per frame
@@ -127,5 +132,19 @@ public class TestPanel : MonoBehaviour {
     {
         myChat.sendChatMessage("Player respawned");
         myNetworkManager.spawnShip();
+    }
+
+    public IEnumerator startAutoConnect()
+    {
+        refreshServers();
+        yield return new WaitForSeconds(1f);
+        if (hostList.Length > 0)
+        {
+            myNetworkManager.JoinServer(hostList[0]);
+        }
+        else
+        {
+            startServer();
+        }
     }
 }
