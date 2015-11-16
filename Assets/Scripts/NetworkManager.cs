@@ -65,12 +65,25 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	public void spawnShip() {
-		GameObject newShip;
-		if (multiplayerEnabled)
-            newShip = (GameObject)Network.Instantiate(shipPrefab, Vector3.zero, Quaternion.identity, 0);
-		else
-            newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
-		GetComponent<CameraFollow> ().myTargets [0] = newShip.GetComponent<Rigidbody>();
-        newShip.layer = 8;
+        GameObject enemyShip = GameObject.FindGameObjectWithTag("Ship");
+        Vector3 spawnLocation = Vector3.zero;
+        if (enemyShip != null)
+        {
+            spawnLocation = enemyShip.transform.position;
+        }
+        StartCoroutine(spawnShipRoutine(spawnLocation, 1f));
 	}
+
+    public IEnumerator spawnShipRoutine(Vector3 location, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameObject newShip;
+        if (multiplayerEnabled)
+            newShip = (GameObject)Network.Instantiate(shipPrefab, Vector3.zero, Quaternion.identity, 0);
+        else
+            newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
+        GetComponent<CameraFollow>().myTargets[0] = newShip.GetComponent<Rigidbody>();
+        newShip.transform.position = location;
+        newShip.layer = 8;
+    }
 }

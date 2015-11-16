@@ -90,6 +90,7 @@ public class Health : MonoBehaviour {
                         Network.Destroy(gameObject);
                     else
                         Destroy(gameObject);
+                    Camera.main.GetComponent<NetworkManager>().spawnShip();
                 }
                 alive = false;
             }

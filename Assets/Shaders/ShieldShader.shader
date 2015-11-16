@@ -25,7 +25,7 @@ SubShader
        
 Cull Back
 ZWrite On
-ZTest LEqual
+ZTest Always
 
 
 CGPROGRAM
