@@ -14,6 +14,7 @@ public class WinCondition : MonoBehaviour {
 	void Update () {
         if (checkpointToCheck.numTimesReached >= condition)
         {
+            Network.Disconnect();
             Application.LoadLevel(winLevel);
         }
 	}

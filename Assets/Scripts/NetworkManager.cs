@@ -26,6 +26,7 @@ public class NetworkManager : MonoBehaviour {
 		MasterServer.RegisterHost (typeName, gameName);
         gameStarted = true;
 	}
+	
 
 	void OnServerInitialized()
 	{
@@ -67,14 +68,16 @@ public class NetworkManager : MonoBehaviour {
 	public void spawnShip() {
         GameObject enemyShip = GameObject.FindGameObjectWithTag("Ship");
         Vector3 spawnLocation = Vector3.zero;
+        float spawnRotation = 90f;
         if (enemyShip != null)
         {
             spawnLocation = enemyShip.transform.position;
+            spawnRotation = enemyShip.transform.eulerAngles.y;
         }
-        StartCoroutine(spawnShipRoutine(spawnLocation, 1f));
+        StartCoroutine(spawnShipRoutine(spawnLocation, spawnRotation, 1f));
 	}
 
-    public IEnumerator spawnShipRoutine(Vector3 location, float delay)
+    public IEnumerator spawnShipRoutine(Vector3 location, float rotationY, float delay)
     {
         yield return new WaitForSeconds(delay);
         GameObject newShip;
@@ -84,6 +87,7 @@ public class NetworkManager : MonoBehaviour {
             newShip = (GameObject)Instantiate(shipPrefab, Vector3.zero, Quaternion.identity);
         GetComponent<CameraFollow>().myTargets[0] = newShip.GetComponent<Rigidbody>();
         newShip.transform.position = location;
+        newShip.transform.eulerAngles = new Vector3(0f, rotationY, 0f);
         newShip.layer = 8;
     }
 }

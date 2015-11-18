@@ -137,10 +137,15 @@ public class Health : MonoBehaviour {
             {
                 myShield = Mathf.Clamp(myShield - damage, 0f, maxShield);
 
+                if (myShield == 0)
+                {
+                    shieldBreakSound.Play();
+                }
+
                 foreach (MeshRenderer shield in shieldMeshRenderers)
                 {
                     Color newColor = shield.material.color;
-                    newColor = new Color(newColor.r, newColor.g, newColor.b, Mathf.Clamp01(newColor.a - shieldHitAlphaIncrease));
+                    newColor = new Color(newColor.r, newColor.g, newColor.b, Mathf.Clamp01(newColor.a + shieldHitAlphaIncrease));
                     shield.material.color = newColor;
                 }
                 foreach (ParticleSystem ps in shieldParticleSystems)
@@ -150,7 +155,6 @@ public class Health : MonoBehaviour {
             }
             else
             {
-                shieldBreakSound.Play();
                 myHealth -= damage;
             }
             FindObjectOfType<HUDChromaticAbberation>().distort(0.5f * damage);
